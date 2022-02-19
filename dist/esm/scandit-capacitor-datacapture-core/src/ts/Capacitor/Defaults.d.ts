@@ -46,6 +46,7 @@ export interface Defaults {
                 style: RectangularViewfinderStyle;
                 lineStyle: RectangularViewfinderLineStyle;
                 dimming: string;
+                disabledDimming: string;
                 animation: RectangularViewfinderAnimation | null;
             };
         };
@@ -85,6 +86,7 @@ interface RectangularViewfinderDefault {
     style: string;
     lineStyle: string;
     dimming: number;
+    disabledDimming: number;
     animation: string;
 }
 export interface DefaultsJSON {

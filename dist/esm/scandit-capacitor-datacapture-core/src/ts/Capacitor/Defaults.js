@@ -54,6 +54,7 @@ export const defaultsFromJSON = (json) => {
                 style: viewfinder.style,
                 lineStyle: viewfinder.lineStyle,
                 dimming: viewfinder.dimming,
+                disabledDimming: viewfinder.disabledDimming,
                 animation: RectangularViewfinderAnimation
                     .fromJSON(viewfinder.animation ? JSON.parse(viewfinder.animation) : null),
             };

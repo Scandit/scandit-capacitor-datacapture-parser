@@ -1,12 +1,19 @@
 
+ext {
+    androidxCoreVersion = project.hasProperty('androidxCoreVersion') ? rootProject.ext.androidxCoreVersion : '1.3.1'
+}
+
 buildscript {
-    ext.kotlin_version = '1.4.21'
+    ext {
+        sdk_version = "6.11.0"
+        kotlin_version = '1.4.21'
+    }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
+        classpath 'com.android.tools.build:gradle:7.0.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -15,10 +22,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 29
+    compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 29
     defaultConfig {
-        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 21
-        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 29
+        minSdk project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 21
+        targetSdk project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 29
         versionCode 1
         versionName "1.0"
     }
@@ -44,8 +51,6 @@ dependencies {
     implementation project(':capacitor-android')
 
     implementation project(':scandit-capacitor-datacapture-core')
-    api "com.scandit.datacapture:parser:6.10.1"
-
-    implementation "androidx.core:core-ktx:1.6.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "com.scandit.datacapture:parser:$sdk_version"
+    implementation "androidx.core:core-ktx:$androidxCoreVersion"
 }

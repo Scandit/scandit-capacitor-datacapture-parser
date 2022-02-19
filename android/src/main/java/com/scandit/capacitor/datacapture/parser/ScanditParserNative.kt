@@ -25,7 +25,8 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @NativePlugin(name = "ScanditParserNative")
-class ScanditParserNative : Plugin(),
+class ScanditParserNative :
+    Plugin(),
     ParserDeserializerListener,
     ComponentDeserializersProvider {
 
@@ -69,10 +70,8 @@ class ScanditParserNative : Plugin(),
                 this.onParseString(parsedData, call)
             }
         } catch (e: JSONException) {
-            e.printStackTrace()
             this.onJsonParseError(e, call)
         } catch (e: RuntimeException) { // TODO [SDC-1851] - fine-catch deserializer exceptions
-            e.printStackTrace()
             this.onParseStringNativeError(e, call)
         }
     }
@@ -91,10 +90,8 @@ class ScanditParserNative : Plugin(),
                 this.onParseRawData(parsedData, call)
             }
         } catch (e: JSONException) {
-            e.printStackTrace()
             this.onJsonParseError(e, call)
         } catch (e: RuntimeException) { // TODO [SDC-1851] - fine-catch deserializer exceptions
-            e.printStackTrace()
             this.onParseRawDataNativeError(e, call)
         }
     }
@@ -111,13 +108,15 @@ class ScanditParserNative : Plugin(),
         parsedData: ParsedData,
         call: PluginCall
     ) {
-        call.resolve(JSObject.fromJSONObject(
-            JSONObject(
-                mapOf(
-                    FIELD_RESULT to parsedData.jsonString
-                ).toString()
+        call.resolve(
+            JSObject.fromJSONObject(
+                JSONObject(
+                    mapOf(
+                        FIELD_RESULT to parsedData.jsonString
+                    ).toString()
+                )
             )
-        ))
+        )
     }
 
     private fun onParseRawDataNativeError(error: Throwable, call: PluginCall) {
@@ -129,13 +128,15 @@ class ScanditParserNative : Plugin(),
     }
 
     private fun onParseString(parsedData: ParsedData, call: PluginCall) {
-        call.resolve(JSObject.fromJSONObject(
-            JSONObject(
-                mapOf(
-                    FIELD_RESULT to parsedData.jsonString
-                ).toString()
+        call.resolve(
+            JSObject.fromJSONObject(
+                JSONObject(
+                    mapOf(
+                        FIELD_RESULT to parsedData.jsonString
+                    ).toString()
+                )
             )
-        ))
+        )
     }
 
     private fun onParseStringNativeError(error: Throwable, call: PluginCall) {
