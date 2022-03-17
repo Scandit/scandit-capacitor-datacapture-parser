@@ -1,10 +1,10 @@
 {
   "name": "scandit-capacitor-datacapture-parser",
-  "version": "6.11.0",
+  "version": "6.12.0",
   "description": "Scandit Data Capture SDK for Capacitor",
   "main": "dist/plugin.cjs.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "module": "dist/esm/scandit-capacitor-datacapture-parser/src/index.js",
+  "types": "dist/esm/scandit-capacitor-datacapture-parser/src/definitions.d.ts",
   "unpkg": "dist/plugin.js",
   "files": [
     "android/src/main/",
@@ -28,6 +28,7 @@
     "native"
   ],
   "scripts": {
+    "postbuild": "node ./scripts/normalize-d-ts.js",
     "lint": "tslint --project . && npm run swiftlint -- lint",
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
     "swiftlint": "node-swiftlint",
@@ -53,7 +54,7 @@
   },
   "dependencies": {
     "@capacitor/core": "^3.0.0",
-    "scandit-capacitor-datacapture-core": "6.11.0"
+    "scandit-capacitor-datacapture-core": "6.12.0"
   },
   "prettier": "@ionic/prettier-config",
   "swiftlint": "@ionic/swiftlint-config",
