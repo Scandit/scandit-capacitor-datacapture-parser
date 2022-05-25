@@ -1,6 +1,6 @@
 {
   "name": "scandit-capacitor-datacapture-parser",
-  "version": "6.12.1",
+  "version": "6.13.0",
   "description": "Scandit Data Capture SDK for Capacitor",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/scandit-capacitor-datacapture-parser/src/index.js",
@@ -15,6 +15,7 @@
   ],
   "author": "Scandit",
   "license": "Apache-2.0",
+  "private": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Scandit/scandit-capacitor-datacapture-parser.git"
@@ -53,8 +54,7 @@
     "typescript": "~4.0.3"
   },
   "dependencies": {
-    "@capacitor/core": "^3.0.0",
-    "scandit-capacitor-datacapture-core": "6.12.1"
+    "scandit-capacitor-datacapture-core": "6.13.0"
   },
   "prettier": "@ionic/prettier-config",
   "swiftlint": "@ionic/swiftlint-config",

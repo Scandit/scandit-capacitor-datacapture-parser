@@ -7,7 +7,11 @@
 package com.scandit.capacitor.datacapture.parser
 
 import android.util.Log
-import com.getcapacitor.*
+import com.getcapacitor.JSObject
+import com.getcapacitor.Plugin
+import com.getcapacitor.PluginCall
+import com.getcapacitor.PluginMethod
+import com.getcapacitor.annotation.CapacitorPlugin
 import com.scandit.capacitor.datacapture.core.ScanditCaptureCoreNative
 import com.scandit.capacitor.datacapture.core.communication.ComponentDeserializersProvider
 import com.scandit.capacitor.datacapture.parser.data.SerializableParserInput
@@ -24,7 +28,7 @@ import com.scandit.datacapture.parser.serialization.ParserDeserializerListener
 import org.json.JSONException
 import org.json.JSONObject
 
-@NativePlugin(name = "ScanditParserNative")
+@CapacitorPlugin(name = "ScanditParserNative")
 class ScanditParserNative :
     Plugin(),
     ParserDeserializerListener,
