@@ -51,7 +51,12 @@ export const capacitorExec = (successCallback, errorCallback, pluginName, functi
     Plugins[pluginName][functionName](args).then(extendedSuccessCallback, extendedErrorCallback);
 };
 export const doReturnWithFinish = (finishCallbackID, result) => {
-    Plugins.ScanditBarcodeNative.finishCallback({ result: Object.assign({ finishCallbackID }, result) });
+    if (Plugins.ScanditBarcodeNative) {
+        Plugins.ScanditBarcodeNative.finishCallback({ result: Object.assign({ finishCallbackID }, result) });
+    }
+    else if (Plugins.ScanditIdNative) {
+        Plugins.ScanditIdNative.finishCallback({ result: Object.assign({ finishCallbackID }, result) });
+    }
     return result;
 };
 //# sourceMappingURL=CommonCapacitor.js.map
