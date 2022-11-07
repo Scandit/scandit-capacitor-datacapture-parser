@@ -24,6 +24,28 @@ var capacitorScanditParserPlugin = (function (exports, core) {
         }
     }
 
+    class ParsedData {
+        get jsonString() {
+            return this._jsonString;
+        }
+        get fields() {
+            return this._fields;
+        }
+        get fieldsByName() {
+            return this._fieldsByName;
+        }
+        static fromJSON(json) {
+            const data = new ParsedData();
+            data._jsonString = JSON.stringify(json);
+            data._fields = json.map(ParsedField.fromJSON);
+            data._fieldsByName = data._fields.reduce((fieldsByName, field) => {
+                fieldsByName[field.name] = field;
+                return fieldsByName;
+            }, {});
+            return data;
+        }
+    }
+
     // tslint:disable-next-line:ban-types
     function ignoreFromSerialization(target, propertyName) {
         target.ignoredProperties = target.ignoredProperties || [];
@@ -76,28 +98,6 @@ var capacitorScanditParserPlugin = (function (exports, core) {
                 json[propertyName] = value;
                 return json;
             }, {});
-        }
-    }
-
-    class ParsedData {
-        get jsonString() {
-            return this._jsonString;
-        }
-        get fields() {
-            return this._fields;
-        }
-        get fieldsByName() {
-            return this._fieldsByName;
-        }
-        static fromJSON(json) {
-            const data = new ParsedData();
-            data._jsonString = JSON.stringify(json);
-            data._fields = json.map(ParsedField.fromJSON);
-            data._fieldsByName = data._fields.reduce((fieldsByName, field) => {
-                fieldsByName[field.name] = field;
-                return fieldsByName;
-            }, {});
-            return data;
         }
     }
 
@@ -272,13 +272,7 @@ var capacitorScanditParserPlugin = (function (exports, core) {
         ParserDataFormat["UsUsid"] = "usUsid";
     })(ParserDataFormat || (ParserDataFormat = {}));
 
-    class ScanditParserPlugin extends core.WebPlugin {
-        constructor() {
-            super({
-                name: 'ScanditParserPlugin',
-                platforms: ['android', 'ios'],
-            });
-        }
+    class ScanditParserPluginImplementation {
         async initialize() {
             const api = {
                 Parser,
@@ -289,11 +283,15 @@ var capacitorScanditParserPlugin = (function (exports, core) {
             return new Promise(resolve => resolve(api));
         }
     }
-    const scanditParser = new ScanditParserPlugin();
-    core.registerWebPlugin(scanditParser);
+    core.registerPlugin('ScanditParserPlugin', {
+        android: () => new ScanditParserPluginImplementation(),
+        ios: () => new ScanditParserPluginImplementation(),
+    });
+    // tslint:disable-next-line:variable-name
+    const ScanditParserPlugin = new ScanditParserPluginImplementation();
 
     exports.ScanditParserPlugin = ScanditParserPlugin;
-    exports.scanditParser = scanditParser;
+    exports.ScanditParserPluginImplementation = ScanditParserPluginImplementation;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

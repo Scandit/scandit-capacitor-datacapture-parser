@@ -1,15 +1,10 @@
-import { WebPlugin } from '@capacitor/core';
+import { registerPlugin } from '@capacitor/core';
+import { ParsedData, } from './ts/ParsedData';
 import { ParsedField, } from './ts/ParsedField';
 import { Parser, } from './ts/Parser';
-import { ParsedData, } from './ts/ParsedData';
 import { ParserDataFormat, } from './ts/ParserDataFormat';
-export class ScanditParserPlugin extends WebPlugin {
-    constructor() {
-        super({
-            name: 'ScanditParserPlugin',
-            platforms: ['android', 'ios'],
-        });
-    }
+export * from './definitions';
+export class ScanditParserPluginImplementation {
     async initialize() {
         const api = {
             Parser,
@@ -20,8 +15,10 @@ export class ScanditParserPlugin extends WebPlugin {
         return new Promise(resolve => resolve(api));
     }
 }
-const scanditParser = new ScanditParserPlugin();
-export { scanditParser };
-import { registerWebPlugin } from '@capacitor/core';
-registerWebPlugin(scanditParser);
+registerPlugin('ScanditParserPlugin', {
+    android: () => new ScanditParserPluginImplementation(),
+    ios: () => new ScanditParserPluginImplementation(),
+});
+// tslint:disable-next-line:variable-name
+export const ScanditParserPlugin = new ScanditParserPluginImplementation();
 //# sourceMappingURL=web.js.map

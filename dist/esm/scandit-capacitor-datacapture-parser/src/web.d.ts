@@ -1,8 +1,6 @@
-import { WebPlugin } from '@capacitor/core';
-import { ScanditParserPluginInterface } from './definitions';
-export declare class ScanditParserPlugin extends WebPlugin implements ScanditParserPluginInterface {
-    constructor();
+import type { ScanditParserPluginInterface } from './definitions';
+export * from './definitions';
+export declare class ScanditParserPluginImplementation implements ScanditParserPluginInterface {
     initialize(): Promise<any>;
 }
-declare const scanditParser: ScanditParserPlugin;
-export { scanditParser };
+export declare const ScanditParserPlugin: ScanditParserPluginImplementation;
