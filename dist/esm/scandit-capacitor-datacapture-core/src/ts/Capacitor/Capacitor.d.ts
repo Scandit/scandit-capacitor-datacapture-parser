@@ -14,9 +14,15 @@ export declare enum CapacitorFunction {
     SubscribeViewListener = "subscribeViewListener",
     GetCurrentCameraState = "getCurrentCameraState",
     GetIsTorchAvailable = "getIsTorchAvailable",
+    GetLastFrame = "getLastFrame",
+    GetLastFrameOrNull = "getLastFrameOrNull",
     EmitFeedback = "emitFeedback",
     SubscribeVolumeButtonObserver = "subscribeVolumeButtonObserver",
     UnsubscribeVolumeButtonObserver = "unsubscribeVolumeButtonObserver"
+}
+export interface CapacitorWindow extends Window {
+    Scandit: any;
+    Capacitor: any;
 }
 export declare const pluginName = "ScanditCaptureCoreNative";
 export declare const Capacitor: {
@@ -24,4 +30,4 @@ export declare const Capacitor: {
     defaults: Defaults;
     exec: (success: Optional<Function>, error: Optional<Function>, functionName: string, args: Optional<[any]>) => void;
 };
-export declare const getDefaults: Promise<Defaults>;
+export declare const getDefaults: () => Promise<Defaults>;

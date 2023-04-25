@@ -138,7 +138,7 @@ const capacitorExec = (successCallback, errorCallback, pluginName, functionName,
                 // tslint:disable-next-line:no-console
                 console.log(`[SCANDIT WARNING] Took ${callbackDuration}ms to execute callback that's blocking native execution. You should keep this duration short, for more information, take a look at the documentation.`);
             }
-            core.Plugins[pluginName].finishCallback([{
+            window.Capacitor.Plugins[pluginName].finishCallback([{
                     finishCallbackID,
                     result: callbackResult,
                 }]);
@@ -153,7 +153,7 @@ const capacitorExec = (successCallback, errorCallback, pluginName, functionName,
             errorCallback(error);
         }
     };
-    core.Plugins[pluginName][functionName](args).then(extendedSuccessCallback, extendedErrorCallback);
+    window.Capacitor.Plugins[pluginName][functionName](args).then(extendedSuccessCallback, extendedErrorCallback);
 };
 
 // tslint:disable-next-line:variable-name
@@ -283,12 +283,13 @@ class ScanditParserPluginImplementation {
             ParserDataFormat,
             ParsedField,
         };
-        return new Promise(resolve => resolve(api));
+        return api;
     }
 }
 core.registerPlugin('ScanditParserPlugin', {
     android: () => new ScanditParserPluginImplementation(),
     ios: () => new ScanditParserPluginImplementation(),
+    web: () => new ScanditParserPluginImplementation(),
 });
 // tslint:disable-next-line:variable-name
 const ScanditParserPlugin = new ScanditParserPluginImplementation();

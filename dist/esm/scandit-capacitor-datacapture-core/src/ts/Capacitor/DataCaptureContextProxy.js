@@ -1,4 +1,3 @@
-import { Plugins } from '@capacitor/core';
 import { ContextStatus } from '../DataCaptureContext+Related';
 import { Capacitor, CapacitorFunction } from './Capacitor';
 import { doReturnWithFinish } from './CommonCapacitor';
@@ -20,12 +19,12 @@ export class DataCaptureContextProxy {
         return contextProxy;
     }
     updateContextFromJSON() {
-        return new Promise((resolve, reject) => Plugins[Capacitor.pluginName][CapacitorFunction.UpdateContextFromJSON]({
+        return new Promise((resolve, reject) => window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.UpdateContextFromJSON]({
             context: JSON.stringify(this.context.toJSON()),
         }).then(resolve.bind(this), reject.bind(this)));
     }
     dispose() {
-        Plugins[Capacitor.pluginName][CapacitorFunction.DisposeContext]();
+        window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.DisposeContext]();
     }
     initialize() {
         this.subscribeListener();
@@ -34,20 +33,20 @@ export class DataCaptureContextProxy {
         this.initializeContextFromJSON();
     }
     initializeContextFromJSON() {
-        return new Promise((resolve, reject) => Plugins[Capacitor.pluginName][CapacitorFunction.ContextFromJSON]({
+        return new Promise((resolve, reject) => window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.ContextFromJSON]({
             context: JSON.stringify(this.context.toJSON()),
         }).then(resolve.bind(this), reject.bind(this)));
     }
     subscribeListener() {
-        Plugins[Capacitor.pluginName][CapacitorFunction.SubscribeContextListener]();
-        Plugins[Capacitor.pluginName]
+        window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.SubscribeContextListener]();
+        window.Capacitor.Plugins[Capacitor.pluginName]
             .addListener(DataCaptureContextListenerEvent.DidChangeContextStatus, this.notifyListeners.bind(this));
-        Plugins[Capacitor.pluginName]
+        window.Capacitor.Plugins[Capacitor.pluginName]
             .addListener(DataCaptureContextListenerEvent.DidStartObservingContext, this.notifyListeners.bind(this));
     }
     // TODO: adjust when readding framedata to the api https://jira.scandit.com/browse/SDC-1159
     // private subscribeFrameListener() {
-    //     Plugins[Capacitor.pluginName][CapacitorFunction.SubscribeContextFrameListener]()
+    //     window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.SubscribeContextFrameListener]()
     //     .then(this.notifyFrameListeners.bind(this), null)
     // }
     notifyListeners(event) {

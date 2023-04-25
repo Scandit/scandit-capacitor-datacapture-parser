@@ -135,7 +135,7 @@ var capacitorScanditParserPlugin = (function (exports, core) {
                     // tslint:disable-next-line:no-console
                     console.log(`[SCANDIT WARNING] Took ${callbackDuration}ms to execute callback that's blocking native execution. You should keep this duration short, for more information, take a look at the documentation.`);
                 }
-                core.Plugins[pluginName].finishCallback([{
+                window.Capacitor.Plugins[pluginName].finishCallback([{
                         finishCallbackID,
                         result: callbackResult,
                     }]);
@@ -150,7 +150,7 @@ var capacitorScanditParserPlugin = (function (exports, core) {
                 errorCallback(error);
             }
         };
-        core.Plugins[pluginName][functionName](args).then(extendedSuccessCallback, extendedErrorCallback);
+        window.Capacitor.Plugins[pluginName][functionName](args).then(extendedSuccessCallback, extendedErrorCallback);
     };
 
     // tslint:disable-next-line:variable-name
@@ -280,12 +280,13 @@ var capacitorScanditParserPlugin = (function (exports, core) {
                 ParserDataFormat,
                 ParsedField,
             };
-            return new Promise(resolve => resolve(api));
+            return api;
         }
     }
     core.registerPlugin('ScanditParserPlugin', {
         android: () => new ScanditParserPluginImplementation(),
         ios: () => new ScanditParserPluginImplementation(),
+        web: () => new ScanditParserPluginImplementation(),
     });
     // tslint:disable-next-line:variable-name
     const ScanditParserPlugin = new ScanditParserPluginImplementation();
@@ -297,5 +298,5 @@ var capacitorScanditParserPlugin = (function (exports, core) {
 
     return exports;
 
-}({}, require('@capacitor/core')));
+})({}, require('@capacitor/core'));
 //# sourceMappingURL=plugin.js.map

@@ -104,4 +104,35 @@ export class CameraSettings extends DefaultSerializeable {
         return this[name];
     }
 }
+export class ImageBuffer {
+    get width() {
+        return this._width;
+    }
+    get height() {
+        return this._height;
+    }
+    get data() {
+        return this._data;
+    }
+}
+export class PrivateFrameData {
+    get imageBuffers() {
+        return this._imageBuffers;
+    }
+    get orientation() {
+        return this._orientation;
+    }
+    static fromJSON(json) {
+        const frameData = new PrivateFrameData();
+        frameData._imageBuffers = json.imageBuffers.map((imageBufferJSON) => {
+            const imageBuffer = new ImageBuffer();
+            imageBuffer._width = imageBufferJSON.width;
+            imageBuffer._height = imageBufferJSON.height;
+            imageBuffer._data = imageBufferJSON.data;
+            return imageBuffer;
+        });
+        frameData._orientation = json.orientation;
+        return frameData;
+    }
+}
 //# sourceMappingURL=Camera+Related.js.map

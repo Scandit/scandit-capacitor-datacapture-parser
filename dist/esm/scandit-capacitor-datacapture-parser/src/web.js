@@ -12,12 +12,13 @@ export class ScanditParserPluginImplementation {
             ParserDataFormat,
             ParsedField,
         };
-        return new Promise(resolve => resolve(api));
+        return api;
     }
 }
 registerPlugin('ScanditParserPlugin', {
     android: () => new ScanditParserPluginImplementation(),
     ios: () => new ScanditParserPluginImplementation(),
+    web: () => new ScanditParserPluginImplementation(),
 });
 // tslint:disable-next-line:variable-name
 export const ScanditParserPlugin = new ScanditParserPluginImplementation();

@@ -1,4 +1,3 @@
-import { Plugins } from '@capacitor/core';
 export class CapacitorError {
     constructor(code, message) {
         this.code = code;
@@ -33,7 +32,7 @@ export const capacitorExec = (successCallback, errorCallback, pluginName, functi
                 // tslint:disable-next-line:no-console
                 console.log(`[SCANDIT WARNING] Took ${callbackDuration}ms to execute callback that's blocking native execution. You should keep this duration short, for more information, take a look at the documentation.`);
             }
-            Plugins[pluginName].finishCallback([{
+            window.Capacitor.Plugins[pluginName].finishCallback([{
                     finishCallbackID,
                     result: callbackResult,
                 }]);
@@ -48,14 +47,14 @@ export const capacitorExec = (successCallback, errorCallback, pluginName, functi
             errorCallback(error);
         }
     };
-    Plugins[pluginName][functionName](args).then(extendedSuccessCallback, extendedErrorCallback);
+    window.Capacitor.Plugins[pluginName][functionName](args).then(extendedSuccessCallback, extendedErrorCallback);
 };
 export const doReturnWithFinish = (finishCallbackID, result) => {
-    if (Plugins.ScanditBarcodeNative) {
-        Plugins.ScanditBarcodeNative.finishCallback({ result: Object.assign({ finishCallbackID }, result) });
+    if (window.Capacitor.Plugins.ScanditBarcodeNative) {
+        window.Capacitor.Plugins.ScanditBarcodeNative.finishCallback({ result: Object.assign({ finishCallbackID }, result) });
     }
-    else if (Plugins.ScanditIdNative) {
-        Plugins.ScanditIdNative.finishCallback({ result: Object.assign({ finishCallbackID }, result) });
+    else if (window.Capacitor.Plugins.ScanditIdNative) {
+        window.Capacitor.Plugins.ScanditIdNative.finishCallback({ result: Object.assign({ finishCallbackID }, result) });
     }
     return result;
 };

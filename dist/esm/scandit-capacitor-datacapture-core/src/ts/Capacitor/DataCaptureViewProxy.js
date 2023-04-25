@@ -1,5 +1,4 @@
-import { Plugins } from '@capacitor/core';
-import { Point, Quadrilateral, Size } from '../Common';
+import { Point, Quadrilateral, Size, } from '../Common';
 import { Capacitor, CapacitorFunction } from './Capacitor';
 import { doReturnWithFinish } from './CommonCapacitor';
 var DataCaptureViewListenerEvent;
@@ -14,30 +13,30 @@ export class DataCaptureViewProxy {
         return viewProxy;
     }
     setPositionAndSize(top, left, width, height, shouldBeUnderWebView) {
-        return new Promise((resolve, reject) => Plugins[Capacitor.pluginName][CapacitorFunction.SetViewPositionAndSize]({
+        return new Promise((resolve, reject) => window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.SetViewPositionAndSize]({
             position: { top, left, width, height, shouldBeUnderWebView },
         }).then(resolve.bind(this), reject.bind(this)));
     }
     show() {
-        return Plugins[Capacitor.pluginName][CapacitorFunction.ShowView]();
+        return window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.ShowView]();
     }
     hide() {
-        return Plugins[Capacitor.pluginName][CapacitorFunction.HideView]();
+        return window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.HideView]();
     }
     viewPointForFramePoint(point) {
-        return new Promise((resolve, reject) => Plugins[Capacitor.pluginName][CapacitorFunction.ViewPointForFramePoint]({
+        return new Promise((resolve, reject) => window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.ViewPointForFramePoint]({
             point: point.toJSON(),
         }).then((convertedPoint) => resolve(Point.fromJSON(convertedPoint)), reject.bind(this)));
     }
     viewQuadrilateralForFrameQuadrilateral(quadrilateral) {
-        return new Promise((resolve, reject) => Plugins[Capacitor.pluginName][CapacitorFunction.ViewQuadrilateralForFrameQuadrilateral]({
+        return new Promise((resolve, reject) => window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.ViewQuadrilateralForFrameQuadrilateral]({
             point: quadrilateral.toJSON(),
         }).then((convertedQuadrilateral) => resolve(Quadrilateral
             .fromJSON(convertedQuadrilateral)), reject.bind(this)));
     }
     subscribeListener() {
-        Plugins[Capacitor.pluginName][CapacitorFunction.SubscribeViewListener]();
-        Plugins[Capacitor.pluginName]
+        window.Capacitor.Plugins[Capacitor.pluginName][CapacitorFunction.SubscribeViewListener]();
+        window.Capacitor.Plugins[Capacitor.pluginName]
             .addListener(DataCaptureViewListenerEvent.DidChangeSizeOrientation, this.notifyListeners.bind(this));
     }
     notifyListeners(event) {
