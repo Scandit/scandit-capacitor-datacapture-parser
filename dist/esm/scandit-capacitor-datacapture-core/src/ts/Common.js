@@ -6,11 +6,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { DefaultSerializeable, nameForSerialization } from './Serializeable';
 export class Point extends DefaultSerializeable {
-    constructor(x, y) {
-        super();
-        this._x = x;
-        this._y = y;
-    }
     get x() {
         return this._x;
     }
@@ -20,6 +15,11 @@ export class Point extends DefaultSerializeable {
     static fromJSON(json) {
         return new Point(json.x, json.y);
     }
+    constructor(x, y) {
+        super();
+        this._x = x;
+        this._y = y;
+    }
 }
 __decorate([
     nameForSerialization('x')
@@ -28,13 +28,6 @@ __decorate([
     nameForSerialization('y')
 ], Point.prototype, "_y", void 0);
 export class Quadrilateral extends DefaultSerializeable {
-    constructor(topLeft, topRight, bottomRight, bottomLeft) {
-        super();
-        this._topLeft = topLeft;
-        this._topRight = topRight;
-        this._bottomRight = bottomRight;
-        this._bottomLeft = bottomLeft;
-    }
     get topLeft() {
         return this._topLeft;
     }
@@ -49,6 +42,13 @@ export class Quadrilateral extends DefaultSerializeable {
     }
     static fromJSON(json) {
         return new Quadrilateral(Point.fromJSON(json.topLeft), Point.fromJSON(json.topRight), Point.fromJSON(json.bottomRight), Point.fromJSON(json.bottomLeft));
+    }
+    constructor(topLeft, topRight, bottomRight, bottomLeft) {
+        super();
+        this._topLeft = topLeft;
+        this._topRight = topRight;
+        this._bottomRight = bottomRight;
+        this._bottomLeft = bottomLeft;
     }
 }
 __decorate([
@@ -70,11 +70,6 @@ export var MeasureUnit;
     MeasureUnit["Fraction"] = "fraction";
 })(MeasureUnit || (MeasureUnit = {}));
 export class NumberWithUnit extends DefaultSerializeable {
-    constructor(value, unit) {
-        super();
-        this._value = value;
-        this._unit = unit;
-    }
     get value() {
         return this._value;
     }
@@ -84,6 +79,11 @@ export class NumberWithUnit extends DefaultSerializeable {
     static fromJSON(json) {
         return new NumberWithUnit(json.value, json.unit);
     }
+    constructor(value, unit) {
+        super();
+        this._value = value;
+        this._unit = unit;
+    }
 }
 __decorate([
     nameForSerialization('value')
@@ -92,11 +92,6 @@ __decorate([
     nameForSerialization('unit')
 ], NumberWithUnit.prototype, "_unit", void 0);
 export class PointWithUnit extends DefaultSerializeable {
-    constructor(x, y) {
-        super();
-        this._x = x;
-        this._y = y;
-    }
     get x() {
         return this._x;
     }
@@ -109,6 +104,11 @@ export class PointWithUnit extends DefaultSerializeable {
     static get zero() {
         return new PointWithUnit(new NumberWithUnit(0, MeasureUnit.Pixel), new NumberWithUnit(0, MeasureUnit.Pixel));
     }
+    constructor(x, y) {
+        super();
+        this._x = x;
+        this._y = y;
+    }
 }
 __decorate([
     nameForSerialization('x')
@@ -117,16 +117,16 @@ __decorate([
     nameForSerialization('y')
 ], PointWithUnit.prototype, "_y", void 0);
 export class Rect extends DefaultSerializeable {
-    constructor(origin, size) {
-        super();
-        this._origin = origin;
-        this._size = size;
-    }
     get origin() {
         return this._origin;
     }
     get size() {
         return this._size;
+    }
+    constructor(origin, size) {
+        super();
+        this._origin = origin;
+        this._size = size;
     }
 }
 __decorate([
@@ -136,16 +136,16 @@ __decorate([
     nameForSerialization('size')
 ], Rect.prototype, "_size", void 0);
 export class RectWithUnit extends DefaultSerializeable {
-    constructor(origin, size) {
-        super();
-        this._origin = origin;
-        this._size = size;
-    }
     get origin() {
         return this._origin;
     }
     get size() {
         return this._size;
+    }
+    constructor(origin, size) {
+        super();
+        this._origin = origin;
+        this._size = size;
     }
 }
 __decorate([
@@ -155,16 +155,16 @@ __decorate([
     nameForSerialization('size')
 ], RectWithUnit.prototype, "_size", void 0);
 export class SizeWithUnit extends DefaultSerializeable {
-    constructor(width, height) {
-        super();
-        this._width = width;
-        this._height = height;
-    }
     get width() {
         return this._width;
     }
     get height() {
         return this._height;
+    }
+    constructor(width, height) {
+        super();
+        this._width = width;
+        this._height = height;
     }
 }
 __decorate([
@@ -174,11 +174,6 @@ __decorate([
     nameForSerialization('height')
 ], SizeWithUnit.prototype, "_height", void 0);
 export class Size extends DefaultSerializeable {
-    constructor(width, height) {
-        super();
-        this._width = width;
-        this._height = height;
-    }
     get width() {
         return this._width;
     }
@@ -188,6 +183,11 @@ export class Size extends DefaultSerializeable {
     static fromJSON(json) {
         return new Size(json.width, json.height);
     }
+    constructor(width, height) {
+        super();
+        this._width = width;
+        this._height = height;
+    }
 }
 __decorate([
     nameForSerialization('width')
@@ -196,15 +196,15 @@ __decorate([
     nameForSerialization('height')
 ], Size.prototype, "_height", void 0);
 export class SizeWithAspect {
-    constructor(size, aspect) {
-        this._size = size;
-        this._aspect = aspect;
-    }
     get size() {
         return this._size;
     }
     get aspect() {
         return this._aspect;
+    }
+    constructor(size, aspect) {
+        this._size = size;
+        this._aspect = aspect;
     }
 }
 __decorate([
@@ -326,13 +326,6 @@ __decorate([
     nameForSerialization('shorterDimensionAndAspectRatio')
 ], SizeWithUnitAndAspect.prototype, "_shorterDimensionAndAspectRatio", void 0);
 export class MarginsWithUnit extends DefaultSerializeable {
-    constructor(left, right, top, bottom) {
-        super();
-        this._left = left;
-        this._right = right;
-        this._top = top;
-        this._bottom = bottom;
-    }
     get left() {
         return this._left;
     }
@@ -351,6 +344,13 @@ export class MarginsWithUnit extends DefaultSerializeable {
     static get zero() {
         return new MarginsWithUnit(new NumberWithUnit(0, MeasureUnit.Pixel), new NumberWithUnit(0, MeasureUnit.Pixel), new NumberWithUnit(0, MeasureUnit.Pixel), new NumberWithUnit(0, MeasureUnit.Pixel));
     }
+    constructor(left, right, top, bottom) {
+        super();
+        this._left = left;
+        this._right = right;
+        this._top = top;
+        this._bottom = bottom;
+    }
 }
 __decorate([
     nameForSerialization('left')
@@ -365,9 +365,6 @@ __decorate([
     nameForSerialization('bottom')
 ], MarginsWithUnit.prototype, "_bottom", void 0);
 export class Color {
-    constructor(hex) {
-        this.hexadecimalString = hex;
-    }
     get redComponent() {
         return this.hexadecimalString.slice(0, 2);
     }
@@ -434,6 +431,9 @@ export class Color {
             return 255 * alpha;
         }
         return alpha;
+    }
+    constructor(hex) {
+        this.hexadecimalString = hex;
     }
     withAlpha(alpha) {
         const newHex = this.hexadecimalString.slice(0, 6) + Color.numberToHex(Color.normalizeAlpha(alpha));

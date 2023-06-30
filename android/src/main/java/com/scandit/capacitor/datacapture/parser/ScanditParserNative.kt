@@ -14,6 +14,7 @@ import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 import com.scandit.capacitor.datacapture.core.ScanditCaptureCoreNative
 import com.scandit.capacitor.datacapture.core.communication.ComponentDeserializersProvider
+import com.scandit.capacitor.datacapture.core.deserializers.DeserializationLifecycleObserver
 import com.scandit.capacitor.datacapture.parser.data.SerializableParserInput
 import com.scandit.capacitor.datacapture.parser.errors.CannotParseRawDataError
 import com.scandit.capacitor.datacapture.parser.errors.CannotParseStringError
@@ -32,7 +33,8 @@ import org.json.JSONObject
 class ScanditParserNative :
     Plugin(),
     ParserDeserializerListener,
-    ComponentDeserializersProvider {
+    ComponentDeserializersProvider,
+    DeserializationLifecycleObserver.Observer {
 
     val a = System.currentTimeMillis()
     private val parsersHandler: ParsersHandler = ParsersHandler()
@@ -166,4 +168,8 @@ class ScanditParserNative :
         ParserDeserializer().also { it.listener = this }
     )
     //endregion
+
+    override fun onParsersRemoved() {
+        parsersHandler.clearParsers()
+    }
 }

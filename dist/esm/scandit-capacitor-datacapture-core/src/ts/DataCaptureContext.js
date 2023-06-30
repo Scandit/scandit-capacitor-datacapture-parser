@@ -19,19 +19,6 @@ export class DataCaptureContextSettings extends DefaultSerializeable {
     }
 }
 export class DataCaptureContext extends DefaultSerializeable {
-    constructor(licenseKey, deviceName) {
-        super();
-        this.licenseKey = licenseKey;
-        this.deviceName = deviceName;
-        this.framework = 'capacitor';
-        this.frameworkVersion = (() => Capacitor.defaults.capacitorVersion)();
-        this.settings = new DataCaptureContextSettings();
-        this._frameSource = null;
-        this.view = null;
-        this.modes = [];
-        this.components = [];
-        this.listeners = [];
-    }
     // TODO: adjust when readding framedata to the api https://jira.scandit.com/browse/SDC-1159
     // @ignoreFromSerialization
     // private frameListeners: DataCaptureContextFrameListener[] = [];
@@ -56,6 +43,19 @@ export class DataCaptureContext extends DefaultSerializeable {
             options = { deviceName: null };
         }
         return new DataCaptureContext(licenseKey, options.deviceName || '');
+    }
+    constructor(licenseKey, deviceName) {
+        super();
+        this.licenseKey = licenseKey;
+        this.deviceName = deviceName;
+        this.framework = 'capacitor';
+        this.frameworkVersion = (() => Capacitor.defaults.capacitorVersion)();
+        this.settings = new DataCaptureContextSettings();
+        this._frameSource = null;
+        this.view = null;
+        this.modes = [];
+        this.components = [];
+        this.listeners = [];
     }
     setFrameSource(frameSource) {
         this._frameSource = frameSource;

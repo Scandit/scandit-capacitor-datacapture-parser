@@ -49,23 +49,6 @@ var PrivateCameraProperty;
     PrivateCameraProperty["CameraAPI"] = "api";
 })(PrivateCameraProperty || (PrivateCameraProperty = {}));
 export class CameraSettings extends DefaultSerializeable {
-    constructor(settings) {
-        super();
-        this.preferredResolution = Capacitor.defaults.Camera.Settings.preferredResolution;
-        this.zoomFactor = Capacitor.defaults.Camera.Settings.zoomFactor;
-        this.zoomGestureZoomFactor = Capacitor.defaults.Camera.Settings.zoomGestureZoomFactor;
-        this.api = 0;
-        this.focus = {
-            range: Capacitor.defaults.Camera.Settings.focusRange,
-            focusGestureStrategy: Capacitor.defaults.Camera.Settings.focusGestureStrategy,
-            shouldPreferSmoothAutoFocus: Capacitor.defaults.Camera.Settings.shouldPreferSmoothAutoFocus,
-        };
-        if (settings !== undefined && settings !== null) {
-            Object.getOwnPropertyNames(settings).forEach(propertyName => {
-                this[propertyName] = settings[propertyName];
-            });
-        }
-    }
     get focusRange() {
         return this.focus.range;
     }
@@ -96,6 +79,23 @@ export class CameraSettings extends DefaultSerializeable {
             settings.api = json.api;
         }
         return settings;
+    }
+    constructor(settings) {
+        super();
+        this.preferredResolution = Capacitor.defaults.Camera.Settings.preferredResolution;
+        this.zoomFactor = Capacitor.defaults.Camera.Settings.zoomFactor;
+        this.zoomGestureZoomFactor = Capacitor.defaults.Camera.Settings.zoomGestureZoomFactor;
+        this.api = 0;
+        this.focus = {
+            range: Capacitor.defaults.Camera.Settings.focusRange,
+            focusGestureStrategy: Capacitor.defaults.Camera.Settings.focusGestureStrategy,
+            shouldPreferSmoothAutoFocus: Capacitor.defaults.Camera.Settings.shouldPreferSmoothAutoFocus,
+        };
+        if (settings !== undefined && settings !== null) {
+            Object.getOwnPropertyNames(settings).forEach(propertyName => {
+                this[propertyName] = settings[propertyName];
+            });
+        }
     }
     setProperty(name, value) {
         this[name] = value;

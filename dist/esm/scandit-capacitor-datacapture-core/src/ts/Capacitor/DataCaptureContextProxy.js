@@ -1,6 +1,5 @@
 import { ContextStatus } from '../DataCaptureContext+Related';
 import { Capacitor, CapacitorFunction } from './Capacitor';
-import { doReturnWithFinish } from './CommonCapacitor';
 var DataCaptureContextListenerEvent;
 (function (DataCaptureContextListenerEvent) {
     DataCaptureContextListenerEvent["DidChangeContextStatus"] = "didChangeStatus";
@@ -54,7 +53,7 @@ export class DataCaptureContextProxy {
             // The event could be undefined/null in case the plugin result did not pass a "message",
             // which could happen e.g. in case of "ok" results, which could signal e.g. successful
             // listener subscriptions.
-            return doReturnWithFinish('', null);
+            return;
         }
         event = Object.assign(Object.assign(Object.assign({}, event), event.argument), { argument: undefined });
         this.context.listeners.forEach((listener) => {
@@ -72,7 +71,7 @@ export class DataCaptureContextProxy {
                     break;
             }
         });
-        return doReturnWithFinish(event.name, null);
+        return;
     }
 }
 //# sourceMappingURL=DataCaptureContextProxy.js.map

@@ -1,12 +1,16 @@
 
 ext {
     androidxCoreVersion = project.hasProperty('androidxCoreVersion') ? rootProject.ext.androidxCoreVersion : '1.6.0'
+    cordovaAndroidVersion =  project.hasProperty('cordovaAndroidVersion') ? rootProject.ext.cordovaAndroidVersion : '10.1.1'
+}
+
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
 buildscript {
     ext {
-        sdk_version = "6.17.2"
-        kotlin_version = "1.6.21"
+        kotlin_version = "1.7.21"
         agp_version = "7.2.1"
     }
     repositories {
@@ -47,11 +51,14 @@ repositories {
 }
 
 dependencies {
+    def sdk_version = "6.18.0"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation fileTree(dir: 'library', include: ['*.aar'])
     implementation project(':capacitor-android')
 
     implementation project(':scandit-capacitor-datacapture-core')
-    api "com.scandit.datacapture:parser:$sdk_version"
+    println("Version of the native sdk used in this build: ${safeExtGet('global_sdk_version', sdk_version)}")
+    api "com.scandit.datacapture:parser:${safeExtGet('global_sdk_version', sdk_version)}"
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
 }

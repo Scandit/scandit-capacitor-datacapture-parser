@@ -102,10 +102,6 @@ var capacitorScanditParserPlugin = (function (exports, core) {
     }
 
     class CapacitorError {
-        constructor(code, message) {
-            this.code = code;
-            this.message = message;
-        }
         static fromJSON(json) {
             if (json && json.code && json.message) {
                 return new CapacitorError(json.code, json.message);
@@ -113,6 +109,10 @@ var capacitorScanditParserPlugin = (function (exports, core) {
             else {
                 return null;
             }
+        }
+        constructor(code, message) {
+            this.code = code;
+            this.message = message;
         }
     }
     const capacitorExec = (successCallback, errorCallback, pluginName, functionName, args) => {
@@ -199,14 +199,6 @@ var capacitorScanditParserPlugin = (function (exports, core) {
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     class Parser extends DefaultSerializeable {
-        constructor() {
-            super();
-            this.type = 'parser';
-            this.options = {};
-            this._id = `${Date.now()}`;
-            this.isInitialized = false;
-            this.waitingForInitialization = [];
-        }
         get id() {
             return this._id;
         }
@@ -225,6 +217,14 @@ var capacitorScanditParserPlugin = (function (exports, core) {
                 parser.waitingForInitialization.forEach(f => f());
                 return parser;
             });
+        }
+        constructor() {
+            super();
+            this.type = 'parser';
+            this.options = {};
+            this._id = `${Date.now()}`;
+            this.isInitialized = false;
+            this.waitingForInitialization = [];
         }
         setOptions(options) {
             this.options = options;
@@ -273,6 +273,7 @@ var capacitorScanditParserPlugin = (function (exports, core) {
     })(ParserDataFormat || (ParserDataFormat = {}));
 
     class ScanditParserPluginImplementation {
+        // eslint-disable-next-line @typescript-eslint/require-await
         async initialize() {
             const api = {
                 Parser,

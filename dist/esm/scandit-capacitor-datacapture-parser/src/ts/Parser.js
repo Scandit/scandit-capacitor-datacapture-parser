@@ -7,14 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { DefaultSerializeable, ignoreFromSerialization, nameForSerialization } from '../../../scandit-capacitor-datacapture-core/src/ts/Serializeable';
 import { ParserProxy } from './Capacitor/ParserProxy';
 export class Parser extends DefaultSerializeable {
-    constructor() {
-        super();
-        this.type = 'parser';
-        this.options = {};
-        this._id = `${Date.now()}`;
-        this.isInitialized = false;
-        this.waitingForInitialization = [];
-    }
     get id() {
         return this._id;
     }
@@ -33,6 +25,14 @@ export class Parser extends DefaultSerializeable {
             parser.waitingForInitialization.forEach(f => f());
             return parser;
         });
+    }
+    constructor() {
+        super();
+        this.type = 'parser';
+        this.options = {};
+        this._id = `${Date.now()}`;
+        this.isInitialized = false;
+        this.waitingForInitialization = [];
     }
     setOptions(options) {
         this.options = options;
