@@ -75,17 +75,17 @@ export interface PrivateCameraSettingsDefaults {
     fromJSON(json: CameraSettingsDefaultsJSON): CameraSettings;
 }
 export interface IdCaptureOverlayDefaultsJSON {
-    defaultCapturedBrush: {
+    DefaultCapturedBrush: {
         fillColor: string;
         strokeColor: string;
         strokeWidth: number;
     };
-    defaultLocalizedBrush: {
+    DefaultLocalizedBrush: {
         fillColor: string;
         strokeColor: string;
         strokeWidth: number;
     };
-    defaultRejectedBrush: {
+    DefaultRejectedBrush: {
         fillColor: string;
         strokeColor: string;
         strokeWidth: number;
