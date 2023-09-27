@@ -70,6 +70,9 @@ export interface CameraSettingsDefaultsJSON {
     zoomGestureZoomFactor: number;
     focusGestureStrategy: string;
     shouldPreferSmoothAutoFocus: boolean;
+    properties: {
+        [key: string]: any;
+    };
 }
 export interface PrivateCameraSettingsDefaults {
     fromJSON(json: CameraSettingsDefaultsJSON): CameraSettings;
