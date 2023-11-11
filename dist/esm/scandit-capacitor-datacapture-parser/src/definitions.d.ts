@@ -230,8 +230,6 @@ export class DataCaptureViewProxy {
     viewPointForFramePoint(point: Point): Promise<Point>;
     viewQuadrilateralForFrameQuadrilateral(quadrilateral: Quadrilateral): Promise<Quadrilateral>;
     private subscribeListener;
-    unregisterListenerForViewEvents(): void;
-    subscribeDidChangeSize(): void;
     private notifyListeners;
     private initialize;
 }

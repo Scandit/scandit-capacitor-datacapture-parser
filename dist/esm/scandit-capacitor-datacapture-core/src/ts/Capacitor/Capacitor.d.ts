@@ -12,7 +12,6 @@ export declare enum CapacitorFunction {
     ViewPointForFramePoint = "viewPointForFramePoint",
     ViewQuadrilateralForFrameQuadrilateral = "viewQuadrilateralForFrameQuadrilateral",
     SubscribeViewListener = "subscribeViewListener",
-    UnsubscribeViewListener = "unsubscribeViewListener",
     GetCurrentCameraState = "getCurrentCameraState",
     GetIsTorchAvailable = "getIsTorchAvailable",
     GetLastFrame = "getLastFrame",
