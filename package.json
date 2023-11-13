@@ -1,6 +1,6 @@
 {
   "name": "scandit-capacitor-datacapture-parser",
-  "version": "6.19.6",
+  "version": "6.18.3",
   "description": "Scandit Data Capture SDK for Capacitor",
   "license": "Apache-2.0",
   "private": false,
@@ -34,15 +34,15 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "scandit-capacitor-datacapture-core": "6.19.6"
+    "scandit-capacitor-datacapture-core": "6.18.3"
   },
   "devDependencies": {
-    "@capacitor/android": "^5.0.0",
-    "@capacitor/core": "^5.0.0",
-    "@capacitor/ios": "^5.0.0",
-    "@capacitor/docgen": "^0.2.1",
-    "@ionic/prettier-config": "^1.0.1",
-    "@ionic/swiftlint-config": "^1.1.2",
+    "@capacitor/android": ">=3.0.0",
+    "@capacitor/core": ">=3.0.0",
+    "@capacitor/ios": ">=3.0.0",
+    "@ionic/prettier-config": "^1.0.0",
+    "@ionic/swiftlint-config": "^1.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "@types/node": "18.15.3",
     "prettier": "^2.0.5",
     "prettier-plugin-java": "^2.0.0",
