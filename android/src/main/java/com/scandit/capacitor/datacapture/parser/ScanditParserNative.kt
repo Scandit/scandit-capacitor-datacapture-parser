@@ -13,14 +13,14 @@ import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 import com.scandit.capacitor.datacapture.core.ScanditCaptureCoreNative
+import com.scandit.capacitor.datacapture.core.communication.ComponentDeserializersProvider
 import com.scandit.capacitor.datacapture.parser.data.SerializableParserInput
 import com.scandit.capacitor.datacapture.parser.errors.CannotParseRawDataError
 import com.scandit.capacitor.datacapture.parser.errors.CannotParseStringError
 import com.scandit.capacitor.datacapture.parser.errors.ParserInstanceNotFoundError
 import com.scandit.capacitor.datacapture.parser.handlers.ParsersHandler
+import com.scandit.datacapture.core.component.serialization.DataCaptureComponentDeserializer
 import com.scandit.datacapture.core.json.JsonValue
-import com.scandit.datacapture.frameworks.core.deserialization.DeserializationLifecycleObserver
-import com.scandit.datacapture.frameworks.core.deserialization.Deserializers
 import com.scandit.datacapture.parser.ParsedData
 import com.scandit.datacapture.parser.Parser
 import com.scandit.datacapture.parser.serialization.ParserDeserializer
@@ -32,11 +32,10 @@ import org.json.JSONObject
 class ScanditParserNative :
     Plugin(),
     ParserDeserializerListener,
-    DeserializationLifecycleObserver.Observer {
+    ComponentDeserializersProvider {
 
+    val a = System.currentTimeMillis()
     private val parsersHandler: ParsersHandler = ParsersHandler()
-
-    private val parserDeserializer = ParserDeserializer()
 
     companion object {
         private const val FIELD_RESULT = "result"
@@ -54,16 +53,6 @@ class ScanditParserNative :
         } else {
             Log.e("Registering:", "Core not found")
         }
-    }
-
-    override fun handleOnStart() {
-        parserDeserializer.listener = this
-        Deserializers.Factory.addComponentDeserializer(parserDeserializer)
-    }
-
-    override fun handleOnPause() {
-        parserDeserializer.listener = null
-        Deserializers.Factory.removeComponentDeserializer(parserDeserializer)
     }
 
     @PluginMethod
@@ -123,15 +112,15 @@ class ScanditParserNative :
         parsedData: ParsedData,
         call: PluginCall
     ) {
-        val payload = JSObject.fromJSONObject(
-            JSONObject(
-                mapOf(
-                    FIELD_RESULT to parsedData.jsonString
+        call.resolve(
+            JSObject.fromJSONObject(
+                JSONObject(
+                    mapOf(
+                        FIELD_RESULT to parsedData.jsonString
+                    ).toString()
                 )
             )
         )
-
-        call.resolve(payload)
     }
 
     private fun onParseRawDataNativeError(error: Throwable, call: PluginCall) {
@@ -143,15 +132,15 @@ class ScanditParserNative :
     }
 
     private fun onParseString(parsedData: ParsedData, call: PluginCall) {
-        val payload = JSObject.fromJSONObject(
-            JSONObject(
-                mapOf(
-                    FIELD_RESULT to parsedData.jsonString
+        call.resolve(
+            JSObject.fromJSONObject(
+                JSONObject(
+                    mapOf(
+                        FIELD_RESULT to parsedData.jsonString
+                    ).toString()
                 )
             )
         )
-
-        call.resolve(payload)
     }
 
     private fun onParseStringNativeError(error: Throwable, call: PluginCall) {
@@ -172,7 +161,9 @@ class ScanditParserNative :
     }
     //endregion
 
-    override fun onParsersRemoved() {
-        parsersHandler.clearParsers()
-    }
+    //region ComponentDeserializersProvider
+    override fun provideComponentDeserializers(): List<DataCaptureComponentDeserializer> = listOf(
+        ParserDeserializer().also { it.listener = this }
+    )
+    //endregion
 }

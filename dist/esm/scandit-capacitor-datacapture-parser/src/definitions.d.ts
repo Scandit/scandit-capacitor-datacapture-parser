@@ -1,4 +1,4 @@
-export type Optional<T> = T | null;
+export declare type Optional<T> = T | null;
 export interface ScanditParserPluginInterface {
     initialize(coreDefaults: any): Promise<any>;
 }
@@ -12,8 +12,7 @@ export class ParserProxy {
     parseRawData(data: string): Promise<ParsedData>;
 }
 
-
-type ParsedDataJSON = [ParsedFieldJSON];
+ type ParsedDataJSON = [ParsedFieldJSON];
 interface PrivateParsedData {
     fromJSON(json: ParsedDataJSON): ParsedData;
 }
@@ -148,15 +147,12 @@ export interface CameraSettingsJSON {
     zoomGestureZoomFactor: number;
     focusGestureStrategy: string;
     shouldPreferSmoothAutoFocus: boolean;
-    properties: {
-        [key: string]: any;
-    };
+    api: number;
 }
 interface PrivateCameraSettings {
     fromJSON(json: CameraSettingsJSON): CameraSettings;
 }
 export class CameraSettings {
-    private focusHiddenProperties;
     preferredResolution: VideoResolution;
     zoomFactor: number;
     zoomGestureZoomFactor: number;
@@ -230,8 +226,6 @@ export class DataCaptureViewProxy {
     viewPointForFramePoint(point: Point): Promise<Point>;
     viewQuadrilateralForFrameQuadrilateral(quadrilateral: Quadrilateral): Promise<Quadrilateral>;
     private subscribeListener;
-    unregisterListenerForViewEvents(): void;
-    subscribeDidChangeSize(): void;
     private notifyListeners;
     private initialize;
 }
@@ -404,8 +398,7 @@ export class MarginsWithUnit {
     private static fromJSON;
     private static get zero();
     constructor(left: NumberWithUnit, right: NumberWithUnit, top: NumberWithUnit, bottom: NumberWithUnit);
-}
-type ColorJSON = string;
+} type ColorJSON = string;
 interface PrivateColor {
     fromJSON(json: ColorJSON): Color;
 }

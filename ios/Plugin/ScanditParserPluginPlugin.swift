@@ -9,7 +9,6 @@ import Capacitor
 import ScanditCaptureCore
 import ScanditCapacitorDatacaptureCore
 import ScanditParser
-import ScanditFrameworksCore
 
 struct ParserCommandArgument: CommandJSONArgument {
     let id: String
@@ -23,13 +22,14 @@ extension Array where Element == Parser {
 }
 
 @objc(ScanditParserNative)
-public class ScanditParserNative: CAPPlugin, DeserializationLifeCycleObserver {
+public class ScanditParserNative: CAPPlugin, DataCapturePlugin {
     private let implementation = ScanditParserPlugin()
+    lazy public var modeDeserializers: [DataCaptureModeDeserializer] = []
 
-    lazy var parserDeserializer: ParserDeserializer = {
+    lazy public var componentDeserializers: [DataCaptureComponentDeserializer] = {
         let parserDeserializer = ParserDeserializer()
         parserDeserializer.delegate = self
-        return parserDeserializer
+        return [parserDeserializer]
     }()
 
     public var components: [DataCaptureComponent] {
@@ -39,22 +39,12 @@ public class ScanditParserNative: CAPPlugin, DeserializationLifeCycleObserver {
     lazy var parsers = [Parser]()
 
     override public func load() {
-        ScanditCapacitorCore.registerComponentDeserializer(parserDeserializer)
-        DeserializationLifeCycleDispatcher.shared.attach(observer: self)
-    }
-
-    @objc
-    func onReset() {
-        DeserializationLifeCycleDispatcher.shared.detach(observer: self)
+        ScanditCaptureCore.dataCapturePlugins.append(self as DataCapturePlugin)
     }
 
     @objc(getDefaults:)
     func getDefaults(call: CAPPluginCall) {
         call.resolve([:])
-    }
-
-    public func parsersRemoved() {
-        parsers.removeAll()
     }
 
     @objc(parseString:)

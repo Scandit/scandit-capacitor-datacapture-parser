@@ -1,17 +1,21 @@
 {
   "name": "scandit-capacitor-datacapture-parser",
-  "version": "6.20.1",
+  "version": "6.17.3",
   "description": "Scandit Data Capture SDK for Capacitor",
-  "license": "Apache-2.0",
-  "private": false,
-  "author": {
-    "name": "Scandit",
-    "email": "support@scandit.com"
-  },
-  "homepage": "https://github.com/Scandit/scandit-capacitor-datacapture-parser",
-  "main": "dist/plugin.js",
+  "main": "dist/plugin.cjs.js",
   "module": "dist/esm/scandit-capacitor-datacapture-parser/src/index.js",
   "types": "dist/esm/scandit-capacitor-datacapture-parser/src/definitions.d.ts",
+  "unpkg": "dist/plugin.js",
+  "files": [
+    "android/src/main/",
+    "android/build.gradle",
+    "dist/",
+    "ios/Plugin/",
+    "ScanditCapacitorDatacaptureParser.podspec"
+  ],
+  "author": "Scandit",
+  "license": "Apache-2.0",
+  "private": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Scandit/scandit-capacitor-datacapture-parser.git"
@@ -26,40 +30,37 @@
   ],
   "scripts": {
     "postbuild": "node ./scripts/normalize-d-ts.js",
-    "lint": "eslint ./src",
+    "lint": "tslint --project . && npm run swiftlint -- lint",
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
     "swiftlint": "node-swiftlint",
     "build": "npm run clean && tsc && rollup -c rollup.config.js",
     "clean": "rimraf ./dist",
     "watch": "tsc --watch"
   },
-  "dependencies": {
-    "scandit-capacitor-datacapture-core": "6.20.1"
-  },
   "devDependencies": {
-    "@capacitor/android": "^5.0.0",
-    "@capacitor/core": "^5.0.0",
-    "@capacitor/ios": "^5.0.0",
-    "@capacitor/docgen": "^0.2.1",
+    "@capacitor/android": ">=3.0.0",
+    "@capacitor/core": ">=3.0.0",
+    "@capacitor/ios": ">=3.0.0",
+    "@capacitor/docgen": "^0.0.10",
+    "@ionic/eslint-config": "^0.3.0",
     "@ionic/prettier-config": "^1.0.1",
     "@ionic/swiftlint-config": "^1.1.2",
-    "@types/node": "18.15.3",
-    "prettier": "^2.0.5",
+    "eslint": "^7.32.0",
+    "prettier": "~2.2.0",
     "prettier-plugin-java": "^2.0.0",
-    "rimraf": "4.4.0",
+    "rimraf": "^4.1.2",
     "rollup": "^2.79.1",
     "swiftlint": "^1.0.1",
-    "typescript": "4.9.5",
-    "eslint": "8.37.0",
-    "@typescript-eslint/parser": "5.57.1",
-    "@typescript-eslint/eslint-plugin": "5.57.1"
+    "typescript": "~4.0.3"
   },
-  "files": [
-    "dist/",
-    "ios/",
-    "android/",
-    "ScanditCapacitorDatacaptureParser.podspec"
-  ],
+  "dependencies": {
+    "scandit-capacitor-datacapture-core": "6.17.3"
+  },
+  "prettier": "@ionic/prettier-config",
+  "swiftlint": "@ionic/swiftlint-config",
+  "eslintConfig": {
+    "extends": "@ionic/eslint-config/recommended"
+  },
   "capacitor": {
     "ios": {
       "src": "ios"
@@ -67,7 +68,5 @@
     "android": {
       "src": "android"
     }
-  },
-  "prettier": "@ionic/prettier-config",
-  "swiftlint": "@ionic/swiftlint-config"
+  }
 }

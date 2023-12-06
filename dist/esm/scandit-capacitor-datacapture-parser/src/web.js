@@ -5,7 +5,6 @@ import { Parser, } from './ts/Parser';
 import { ParserDataFormat, } from './ts/ParserDataFormat';
 export * from './definitions';
 export class ScanditParserPluginImplementation {
-    // eslint-disable-next-line @typescript-eslint/require-await
     async initialize() {
         const api = {
             Parser,
