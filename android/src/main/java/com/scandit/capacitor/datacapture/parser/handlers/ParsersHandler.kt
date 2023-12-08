@@ -16,4 +16,8 @@ class ParsersHandler {
     fun registerParser(parserId: String, parser: Parser) {
         parsers[parserId] = parser
     }
+
+    fun clearParsers() {
+        parsers.clear()
+    }
 }
