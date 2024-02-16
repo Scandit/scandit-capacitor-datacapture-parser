@@ -81,17 +81,12 @@ const Capacitor = {
     pluginName: 'ScanditParserNative',
     exec: (success, error, functionName, args) => capacitorExec(success, error, Capacitor.pluginName, functionName, args),
 };
-// const getDefaults: Promise<void> = new Promise((resolve, reject) => {
-//   Capacitor.exec(
-//     resolve,
-//     reject,
-//     'getDefaults',
-//     null);
-// });
 var PluginMethod;
 (function (PluginMethod) {
     PluginMethod["ParseString"] = "parseString";
     PluginMethod["ParseRawData"] = "parseRawData";
+    PluginMethod["CreateUpdateNativeInstance"] = "createUpdateNativeInstance";
+    PluginMethod["DisposeParser"] = "disposeParser";
 })(PluginMethod || (PluginMethod = {}));
 
 class ParserProxy {
@@ -101,16 +96,22 @@ class ParserProxy {
         return proxy;
     }
     parseString(data) {
-        return new Promise((resolve, reject) => this.parser.waitForInitialization().then(() => ParserProxy.capacitorExec((parsedData) => resolve(ParsedData.fromJSON(JSON.parse(parsedData.result))), reject, PluginMethod.ParseString, {
+        return new Promise((resolve, reject) => this.parser.waitForInitialization().then(() => ParserProxy.capacitorExec((payload) => resolve(ParsedData.fromJSON(JSON.parse(payload.data))), reject, PluginMethod.ParseString, {
             id: this.parser.id,
             data,
         })));
     }
     parseRawData(data) {
-        return new Promise((resolve, reject) => this.parser.waitForInitialization().then(() => ParserProxy.capacitorExec((parsedData) => resolve(ParsedData.fromJSON(JSON.parse(parsedData.result))), reject, PluginMethod.ParseRawData, {
+        return new Promise((resolve, reject) => this.parser.waitForInitialization().then(() => ParserProxy.capacitorExec((payload) => resolve(ParsedData.fromJSON(JSON.parse(payload.data))), reject, PluginMethod.ParseRawData, {
             id: this.parser.id,
             data,
         })));
+    }
+    createUpdateNativeInstance() {
+        return new Promise((resolve, reject) => ParserProxy.capacitorExec(resolve, reject, PluginMethod.CreateUpdateNativeInstance, { data: JSON.stringify(this.parser.toJSON()) }));
+    }
+    disposeParser() {
+        return new Promise((resolve, reject) => ParserProxy.capacitorExec(resolve, reject, PluginMethod.DisposeParser, { data: this.parser.id }));
     }
 }
 ParserProxy.capacitorExec = Capacitor.exec;
@@ -128,7 +129,8 @@ class Parser extends DefaultSerializeable {
     static forContextAndFormat(context, dataFormat) {
         const parser = new Parser();
         parser.dataFormat = dataFormat;
-        return context.addComponent(parser)
+        parser._context = context;
+        return parser.proxy.createUpdateNativeInstance()
             .then(() => {
             parser.isInitialized = true;
             parser.waitingForInitialization.forEach(f => f());
@@ -145,13 +147,16 @@ class Parser extends DefaultSerializeable {
     }
     setOptions(options) {
         this.options = options;
-        return this._context.update();
+        return this.proxy.createUpdateNativeInstance();
     }
     parseString(data) {
         return this.proxy.parseString(data);
     }
     parseRawData(data) {
         return this.proxy.parseRawData(data);
+    }
+    dispose() {
+        this.proxy.disposeParser();
     }
     waitForInitialization() {
         if (this.isInitialized) {

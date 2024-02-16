@@ -4,5 +4,7 @@ export declare const Capacitor: {
 };
 export declare enum PluginMethod {
     ParseString = "parseString",
-    ParseRawData = "parseRawData"
+    ParseRawData = "parseRawData",
+    CreateUpdateNativeInstance = "createUpdateNativeInstance",
+    DisposeParser = "disposeParser"
 }
