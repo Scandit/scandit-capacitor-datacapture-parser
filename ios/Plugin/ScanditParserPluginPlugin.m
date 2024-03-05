@@ -11,6 +11,4 @@
 // each method the plugin supports using the CAP_PLUGIN_METHOD macro.
 CAP_PLUGIN(ScanditParserNative, "ScanditParserNative",
            CAP_PLUGIN_METHOD(parseString, CAPPluginReturnPromise);
-           CAP_PLUGIN_METHOD(parseRawData, CAPPluginReturnPromise);
-           CAP_PLUGIN_METHOD(createUpdateNativeInstance, CAPPluginReturnPromise);
-           CAP_PLUGIN_METHOD(disposeParser, CAPPluginReturnPromise);)
+           CAP_PLUGIN_METHOD(parseRawData, CAPPluginReturnPromise);)

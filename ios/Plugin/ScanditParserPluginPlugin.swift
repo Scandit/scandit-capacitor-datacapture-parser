@@ -6,31 +6,55 @@
 
 import Foundation
 import Capacitor
+import ScanditCaptureCore
 import ScanditCapacitorDatacaptureCore
-import ScanditFrameworksParser
+import ScanditParser
+import ScanditFrameworksCore
 
 struct ParserCommandArgument: CommandJSONArgument {
     let id: String
     let data: String
 }
 
+extension Array where Element == Parser {
+    func parser(withID parserID: String) -> Parser? {
+        return self.first(where: { $0.componentId == parserID })
+    }
+}
+
 @objc(ScanditParserNative)
-public class ScanditParserNative: CAPPlugin {
-    var parserModule: ParserModule!
+public class ScanditParserNative: CAPPlugin, DeserializationLifeCycleObserver {
+    private let implementation = ScanditParserPlugin()
+
+    lazy var parserDeserializer: ParserDeserializer = {
+        let parserDeserializer = ParserDeserializer()
+        parserDeserializer.delegate = self
+        return parserDeserializer
+    }()
+
+    public var components: [DataCaptureComponent] {
+        return parsers
+    }
+
+    lazy var parsers = [Parser]()
 
     override public func load() {
-        parserModule = ParserModule()
-        parserModule.didStart()
+        ScanditCapacitorCore.registerComponentDeserializer(parserDeserializer)
+        DeserializationLifeCycleDispatcher.shared.attach(observer: self)
     }
 
     @objc
     func onReset() {
-        parserModule.didStop()
+        DeserializationLifeCycleDispatcher.shared.detach(observer: self)
     }
 
     @objc(getDefaults:)
     func getDefaults(call: CAPPluginCall) {
         call.resolve([:])
+    }
+
+    public func parsersRemoved() {
+        parsers.removeAll()
     }
 
     @objc(parseString:)
@@ -39,9 +63,20 @@ public class ScanditParserNative: CAPPlugin {
             call.reject(CommandError.invalidJSON.toJSONString())
             return
         }
-        parserModule.parse(string: commandArgument.data,
-                           id: commandArgument.id,
-                           result: CapacitorResult(call))
+
+        guard let parser = parsers.parser(withID: commandArgument.id) else {
+            call.reject(CommandError.parserNotFound.toJSONString())
+            return
+        }
+
+        do {
+            let parsedData = try parser.parseString(commandArgument.data)
+            call.resolve([
+                "result": parsedData.jsonString
+            ])
+        } catch let error {
+            call.reject(CommandError.couldNotParseString(reason: error.localizedDescription).toJSONString())
+        }
     }
 
     @objc(parseRawData:)
@@ -50,26 +85,24 @@ public class ScanditParserNative: CAPPlugin {
             call.reject(CommandError.invalidJSON.toJSONString())
             return
         }
-        parserModule.parse(data: commandArgument.data,
-                           id: commandArgument.id,
-                           result: CapacitorResult(call))
-    }
 
-    @objc(createUpdateNativeInstance:)
-    func createUpdateNativeInstance(call: CAPPluginCall) {
-        guard let parserJson = call.getString("data") else {
-            call.reject(CommandError.invalidJSON.toJSONString())
+        guard let parser = parsers.parser(withID: commandArgument.id) else {
+            call.reject(CommandError.parserNotFound.toJSONString())
             return
         }
-        parserModule.createOrUpdateParser(parserJson: parserJson, result: CapacitorResult(call))
-    }
 
-    @objc(disposeParser:)
-    func disposeParser(call: CAPPluginCall) {
-        guard let parserId = call.getString("data") else {
-            call.reject(CommandError.invalidJSON.toJSONString())
+        guard let data = Data(base64Encoded: commandArgument.data) else {
+            call.reject(CommandError.couldNotParseRawData(reason: "Could not decode base64 data").toJSONString())
             return
         }
-        parserModule.disposeParser(parserId: parserId, result: CapacitorResult(call))
+
+        do {
+            let parsedData = try parser.parseRawData(data)
+            call.resolve([
+                "result": parsedData.jsonString
+            ])
+        } catch let error {
+            call.reject(CommandError.couldNotParseRawData(reason: error.localizedDescription).toJSONString())
+        }
     }
 }

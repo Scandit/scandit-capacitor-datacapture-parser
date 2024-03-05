@@ -56,7 +56,7 @@ repositories {
 }
 
 dependencies {
-    def sdk_version = "6.22.0"
+    def sdk_version = "6.21.3"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation fileTree(dir: 'library', include: ['*.aar'])
@@ -64,10 +64,6 @@ dependencies {
 
     implementation project(':scandit-capacitor-datacapture-core')
     println("Version of the native sdk used in this build: ${safeExtGet('global_sdk_version', sdk_version)}")
-    if (findProject(':scandit-datacapture-frameworks-parser') != null) {
-        api project(":scandit-datacapture-frameworks-parser")
-    } else {
-        api "com.scandit.datacapture.frameworks:parser:${safeExtGet('global_sdk_version', sdk_version)}"
-    }
+    api "com.scandit.datacapture:parser:${safeExtGet('global_sdk_version', sdk_version)}"
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
 }
