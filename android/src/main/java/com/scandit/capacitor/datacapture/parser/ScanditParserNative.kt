@@ -13,35 +13,15 @@ import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 import com.scandit.capacitor.datacapture.core.ScanditCaptureCoreNative
-import com.scandit.capacitor.datacapture.parser.data.SerializableParserInput
-import com.scandit.capacitor.datacapture.parser.errors.CannotParseRawDataError
-import com.scandit.capacitor.datacapture.parser.errors.CannotParseStringError
-import com.scandit.capacitor.datacapture.parser.errors.ParserInstanceNotFoundError
-import com.scandit.capacitor.datacapture.parser.handlers.ParsersHandler
-import com.scandit.datacapture.core.json.JsonValue
-import com.scandit.datacapture.frameworks.core.deserialization.DeserializationLifecycleObserver
-import com.scandit.datacapture.frameworks.core.deserialization.Deserializers
-import com.scandit.datacapture.parser.ParsedData
-import com.scandit.datacapture.parser.Parser
-import com.scandit.datacapture.parser.serialization.ParserDeserializer
-import com.scandit.datacapture.parser.serialization.ParserDeserializerListener
+import com.scandit.capacitor.datacapture.core.utils.CapacitorResult
+import com.scandit.datacapture.frameworks.parser.ParserModule
 import org.json.JSONException
 import org.json.JSONObject
 
 @CapacitorPlugin(name = "ScanditParserNative")
-class ScanditParserNative :
-    Plugin(),
-    ParserDeserializerListener,
-    DeserializationLifecycleObserver.Observer {
-
-    private val parsersHandler: ParsersHandler = ParsersHandler()
-
-    private val parserDeserializer = ParserDeserializer()
-
-    companion object {
-        private const val FIELD_RESULT = "result"
-        private const val CORE_PLUGIN_NAME = "ScanditCaptureCoreNative"
-    }
+class ScanditParserNative(
+    private val parserModule: ParserModule = ParserModule()
+) : Plugin() {
 
     override fun load() {
         super.load()
@@ -54,125 +34,39 @@ class ScanditParserNative :
         } else {
             Log.e("Registering:", "Core not found")
         }
+        parserModule.onCreate(bridge.context)
     }
 
-    override fun handleOnStart() {
-        parserDeserializer.listener = this
-        Deserializers.Factory.addComponentDeserializer(parserDeserializer)
-    }
-
-    override fun handleOnPause() {
-        parserDeserializer.listener = null
-        Deserializers.Factory.removeComponentDeserializer(parserDeserializer)
+    override fun handleOnDestroy() {
+        parserModule.onDestroy()
     }
 
     @PluginMethod
     fun getDefaults(call: PluginCall) {
-        this.onParserDefaults(call)
+        call.resolve(JSObject())
     }
 
     @PluginMethod
     fun parseString(call: PluginCall) {
-        try {
-            val input =
-                SerializableParserInput.Decoder().decode(JSONObject(call.data.toString()))
-            val parser = parsersHandler.getParserForId(input.parserId)
-
-            if (parser == null) {
-                this.onParseStringNoParserError(call)
-            } else {
-                val parsedData = parser.parseString(input.data)
-                this.onParseString(parsedData, call)
-            }
-        } catch (e: JSONException) {
-            this.onJsonParseError(e, call)
-        } catch (e: RuntimeException) { // TODO [SDC-1851] - fine-catch deserializer exceptions
-            this.onParseStringNativeError(e, call)
-        }
+        parserModule.parseString(call.data.toString(), CapacitorResult(call))
     }
 
     @PluginMethod
     fun parseRawData(call: PluginCall) {
-        try {
-            val input =
-                SerializableParserInput.Decoder().decode(JSONObject(call.data.toString()))
-            val parser = parsersHandler.getParserForId(input.parserId)
-
-            if (parser == null) {
-                this.onParseRawDataNoParserError(call)
-            } else {
-                val parsedData = parser.parseRawData(input.rawData)
-                this.onParseRawData(parsedData, call)
-            }
-        } catch (e: JSONException) {
-            this.onJsonParseError(e, call)
-        } catch (e: RuntimeException) { // TODO [SDC-1851] - fine-catch deserializer exceptions
-            this.onParseRawDataNativeError(e, call)
-        }
+        parserModule.parseRawData(call.data.toString(), CapacitorResult(call))
     }
 
-    private fun onParserDefaults(call: PluginCall) {
-        call.resolve(JSObject())
+    @PluginMethod
+    fun createUpdateNativeInstance(call: PluginCall) {
+        parserModule.createOrUpdateParser(call.data.getString("data") ?: "", CapacitorResult(call))
     }
 
-    private fun onJsonParseError(error: Throwable, call: PluginCall) {
-        call.reject(error.message)
+    @PluginMethod
+    fun disposeParser(call: PluginCall) {
+        parserModule.disposeParser(call.data.getString("data") ?: "", CapacitorResult(call))
     }
 
-    private fun onParseRawData(
-        parsedData: ParsedData,
-        call: PluginCall
-    ) {
-        val payload = JSObject.fromJSONObject(
-            JSONObject(
-                mapOf(
-                    FIELD_RESULT to parsedData.jsonString
-                )
-            )
-        )
-
-        call.resolve(payload)
-    }
-
-    private fun onParseRawDataNativeError(error: Throwable, call: PluginCall) {
-        call.reject(CannotParseStringError(error.localizedMessage.orEmpty()).message)
-    }
-
-    private fun onParseRawDataNoParserError(call: PluginCall) {
-        call.resolve(JSObject(ParserInstanceNotFoundError().message))
-    }
-
-    private fun onParseString(parsedData: ParsedData, call: PluginCall) {
-        val payload = JSObject.fromJSONObject(
-            JSONObject(
-                mapOf(
-                    FIELD_RESULT to parsedData.jsonString
-                )
-            )
-        )
-
-        call.resolve(payload)
-    }
-
-    private fun onParseStringNativeError(error: Throwable, call: PluginCall) {
-        call.reject(CannotParseRawDataError(error.localizedMessage.orEmpty()).message)
-    }
-
-    private fun onParseStringNoParserError(call: PluginCall) {
-        call.reject(ParserInstanceNotFoundError().message)
-    }
-
-    //region ParserDeserializerListener
-    override fun onParserDeserializationFinished(
-        deserializer: ParserDeserializer,
-        parser: Parser,
-        json: JsonValue
-    ) {
-        parsersHandler.registerParser(json.requireByKeyAsString("id"), parser)
-    }
-    //endregion
-
-    override fun onParsersRemoved() {
-        parsersHandler.clearParsers()
+    companion object {
+        private const val CORE_PLUGIN_NAME = "ScanditCaptureCoreNative"
     }
 }
