@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
 
   s.dependency "Capacitor"
   s.dependency "ScanditCapacitorDatacaptureCore", "= #{version}"
-  s.dependency "scandit-datacapture-frameworks-parser", '= 6.23.1'
+  s.dependency "scandit-datacapture-frameworks-parser", '= 6.22.2'
 end
