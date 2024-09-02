@@ -1,10 +1,8 @@
-import { ParserIssue, ParserIssueJSON } from './ParserIssue';
 export interface ParsedFieldJSON {
     name: string;
     parsed: any;
     rawString: string;
     issues?: string[];
-    warnings?: ParserIssueJSON[];
 }
 export interface PrivateParsedField {
     fromJSON(json: ParsedFieldJSON): ParsedField;
@@ -18,7 +16,5 @@ export declare class ParsedField {
     get rawString(): string;
     private _issues;
     get issues(): string[];
-    private _warnings;
-    get warnings(): ParserIssue[];
     private static fromJSON;
 }

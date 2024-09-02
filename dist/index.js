@@ -2,25 +2,6 @@ import { registerPlugin } from '@capacitor/core';
 import { nameForSerialization, ignoreFromSerialization, DefaultSerializeable } from 'scandit-capacitor-datacapture-core/dist/core';
 import { capacitorExec } from 'scandit-capacitor-datacapture-core';
 
-class ParserIssue {
-    get code() {
-        return this._code;
-    }
-    get message() {
-        return this._message;
-    }
-    get additionalInfo() {
-        return this._additionalInfo;
-    }
-    static fromJSON(json) {
-        const issue = new ParserIssue();
-        issue._code = json.code;
-        issue._message = json.message;
-        issue._additionalInfo = json.additionalInfo;
-        return issue;
-    }
-}
-
 class ParsedField {
     get name() {
         return this._name;
@@ -34,17 +15,12 @@ class ParsedField {
     get issues() {
         return this._issues;
     }
-    get warnings() {
-        return this._warnings;
-    }
     static fromJSON(json) {
-        var _a;
         const field = new ParsedField();
         field._name = json.name;
         field._parsed = json.parsed;
         field._rawString = json.rawString;
         field._issues = json.issues || [];
-        field._warnings = ((_a = json.warnings) === null || _a === void 0 ? void 0 : _a.map(e => ParserIssue.fromJSON(e))) || [];
         return field;
     }
 }
@@ -55,9 +31,6 @@ class ParsedData {
     }
     get fields() {
         return this._fields;
-    }
-    get fieldsWithIssues() {
-        return this._fieldsWithIssues;
     }
     get fieldsByName() {
         return this._fieldsByName;
@@ -70,7 +43,6 @@ class ParsedData {
             fieldsByName[field.name] = field;
             return fieldsByName;
         }, {});
-        data._fieldsWithIssues = data._fields.filter(e => e.warnings.length > 0);
         return data;
     }
 }
@@ -232,40 +204,7 @@ var ParserDataFormat;
      * Use ID Capture instead.
      */
     ParserDataFormat["UsUsid"] = "usUsid";
-    ParserDataFormat["IataBcbp"] = "iataBcbp";
-    ParserDataFormat["Gs1DigitalLink"] = "gs1DigitalLink";
 })(ParserDataFormat || (ParserDataFormat = {}));
-
-var ParserIssueCode;
-(function (ParserIssueCode) {
-    ParserIssueCode["None"] = "none";
-    ParserIssueCode["Unspecified"] = "unspecified";
-    ParserIssueCode["MandatoryEpdMissing"] = "mandatoryEpdMissing";
-    ParserIssueCode["InvalidDate"] = "invalidDate";
-    ParserIssueCode["StringTooShort"] = "stringTooShort";
-    ParserIssueCode["WrongStartingCharacters"] = "wrongStartingCharacters";
-    ParserIssueCode["InvalidSeparationBetweenElements"] = "invalidSeparationBetweenElements";
-    ParserIssueCode["UnsupportedVersion"] = "unsupportedVersion";
-    ParserIssueCode["IncompleteCode"] = "incompleteCode";
-    ParserIssueCode["EmptyElementContent"] = "emptyElementContent";
-    ParserIssueCode["InvalidElementLength"] = "invalidElementLength";
-    ParserIssueCode["TooLongElement"] = "tooLongElement";
-    ParserIssueCode["NonEmptyElementContent"] = "nonEmptyElementContent";
-    ParserIssueCode["InvalidCharsetInElement"] = "invalidCharsetInElement";
-    ParserIssueCode["TooManyAltPmtFields"] = "tooManyAltPmtFields";
-    ParserIssueCode["CannotContainSpaces"] = "cannotContainSpaces";
-})(ParserIssueCode || (ParserIssueCode = {}));
-
-var ParserIssueAdditionalInfoKey;
-(function (ParserIssueAdditionalInfoKey) {
-    ParserIssueAdditionalInfoKey["StartingCharacters"] = "startingCharacters";
-    ParserIssueAdditionalInfoKey["Version"] = "version";
-    ParserIssueAdditionalInfoKey["MinimalVersion"] = "minimalVersion";
-    ParserIssueAdditionalInfoKey["ElementName"] = "elementName";
-    ParserIssueAdditionalInfoKey["String"] = "string";
-    ParserIssueAdditionalInfoKey["Length"] = "length";
-    ParserIssueAdditionalInfoKey["Charset"] = "charset";
-})(ParserIssueAdditionalInfoKey || (ParserIssueAdditionalInfoKey = {}));
 
 class ScanditParserPluginImplementation {
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -275,9 +214,6 @@ class ScanditParserPluginImplementation {
             ParsedData,
             ParserDataFormat,
             ParsedField,
-            ParserIssueCode,
-            ParserIssueAdditionalInfoKey,
-            ParserIssue
         };
         return api;
     }

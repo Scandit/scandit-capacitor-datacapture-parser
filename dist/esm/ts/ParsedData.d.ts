@@ -8,8 +8,6 @@ export declare class ParsedData {
     get jsonString(): string;
     private _fields;
     get fields(): ParsedField[];
-    private _fieldsWithIssues;
-    get fieldsWithIssues(): ParsedField[];
     private _fieldsByName;
     get fieldsByName(): {
         [key: string]: ParsedField;
