@@ -17,5 +17,7 @@ export declare enum ParserDataFormat {
      * @deprecated ParserDataFormat.UsUsid
      * Use ID Capture instead.
      */
-    UsUsid = "usUsid"
+    UsUsid = "usUsid",
+    IataBcbp = "iataBcbp",
+    Gs1DigitalLink = "gs1DigitalLink"
 }
