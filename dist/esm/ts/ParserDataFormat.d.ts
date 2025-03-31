@@ -1,8 +1,8 @@
 export declare enum ParserDataFormat {
     GS1AI = "gs1ai",
     HIBC = "hibc",
-    SwissQR = "swissQr",
+    SwissQR = "swissqr",
     VIN = "vin",
-    IataBcbp = "iataBcbp",
-    Gs1DigitalLink = "gs1DigitalLink"
+    IataBcbp = "iata_bcbp",
+    Gs1DigitalLink = "gs1_digital_link"
 }

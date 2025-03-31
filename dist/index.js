@@ -211,10 +211,10 @@ var ParserDataFormat;
 (function (ParserDataFormat) {
     ParserDataFormat["GS1AI"] = "gs1ai";
     ParserDataFormat["HIBC"] = "hibc";
-    ParserDataFormat["SwissQR"] = "swissQr";
+    ParserDataFormat["SwissQR"] = "swissqr";
     ParserDataFormat["VIN"] = "vin";
-    ParserDataFormat["IataBcbp"] = "iataBcbp";
-    ParserDataFormat["Gs1DigitalLink"] = "gs1DigitalLink";
+    ParserDataFormat["IataBcbp"] = "iata_bcbp";
+    ParserDataFormat["Gs1DigitalLink"] = "gs1_digital_link";
 })(ParserDataFormat || (ParserDataFormat = {}));
 
 var ParserIssueCode;
