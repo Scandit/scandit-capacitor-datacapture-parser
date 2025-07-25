@@ -9,4 +9,7 @@ export declare class ParserProxy {
     createUpdateNativeInstance(): Promise<void>;
     disposeParser(): Promise<void>;
 }
+export interface ParserResult {
+    data: string;
+}
 export {};
