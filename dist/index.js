@@ -31,9 +31,6 @@ class ParsedField {
     get rawString() {
         return this._rawString;
     }
-    get issues() {
-        return this._issues;
-    }
     get warnings() {
         return this._warnings;
     }
@@ -43,7 +40,6 @@ class ParsedField {
         field._name = json.name;
         field._parsed = json.parsed;
         field._rawString = json.rawString;
-        field._issues = json.issues || [];
         field._warnings = ((_a = json.warnings) === null || _a === void 0 ? void 0 : _a.map(e => ParserIssue.fromJSON(e))) || [];
         return field;
     }
@@ -215,25 +211,10 @@ var ParserDataFormat;
 (function (ParserDataFormat) {
     ParserDataFormat["GS1AI"] = "gs1ai";
     ParserDataFormat["HIBC"] = "hibc";
-    /**
-     * @deprecated ParserDataFormat.DLID
-     * Use ID Capture instead.
-     */
-    ParserDataFormat["DLID"] = "dlid";
-    /**
-     * @deprecated ParserDataFormat.MRTD
-     * Use ID Capture instead.
-     */
-    ParserDataFormat["MRTD"] = "mrtd";
-    ParserDataFormat["SwissQR"] = "swissQr";
+    ParserDataFormat["SwissQR"] = "swissqr";
     ParserDataFormat["VIN"] = "vin";
-    /**
-     * @deprecated ParserDataFormat.UsUsid
-     * Use ID Capture instead.
-     */
-    ParserDataFormat["UsUsid"] = "usUsid";
-    ParserDataFormat["IataBcbp"] = "iataBcbp";
-    ParserDataFormat["Gs1DigitalLink"] = "gs1DigitalLink";
+    ParserDataFormat["IataBcbp"] = "iata_bcbp";
+    ParserDataFormat["Gs1DigitalLink"] = "gs1_digital_link";
 })(ParserDataFormat || (ParserDataFormat = {}));
 
 var ParserIssueCode;
