@@ -1,6 +1,6 @@
-import { registerPlugin } from '@capacitor/core';
-import { nameForSerialization, ignoreFromSerialization, DefaultSerializeable } from 'scandit-capacitor-datacapture-core/dist/core';
+import { nameForSerialization, DefaultSerializeable, ignoreFromSerialization } from 'scandit-capacitor-datacapture-core/dist/core';
 import { capacitorExec } from 'scandit-capacitor-datacapture-core';
+import { registerPlugin } from '@capacitor/core';
 
 class ParserIssue {
     get code() {
@@ -31,9 +31,6 @@ class ParsedField {
     get rawString() {
         return this._rawString;
     }
-    get issues() {
-        return this._issues;
-    }
     get warnings() {
         return this._warnings;
     }
@@ -43,7 +40,6 @@ class ParsedField {
         field._name = json.name;
         field._parsed = json.parsed;
         field._rawString = json.rawString;
-        field._issues = json.issues || [];
         field._warnings = ((_a = json.warnings) === null || _a === void 0 ? void 0 : _a.map(e => ParserIssue.fromJSON(e))) || [];
         return field;
     }
@@ -154,10 +150,9 @@ class Parser extends DefaultSerializeable {
         }
         return this._proxy;
     }
-    static forContextAndFormat(context, dataFormat) {
+    static create(dataFormat) {
         const parser = new Parser();
         parser.dataFormat = dataFormat;
-        parser._context = context;
         return parser.proxy.createUpdateNativeInstance()
             .then(() => {
             parser.isInitialized = true;
@@ -200,9 +195,6 @@ __decorate([
 ], Parser.prototype, "_id", void 0);
 __decorate([
     ignoreFromSerialization
-], Parser.prototype, "_context", void 0);
-__decorate([
-    ignoreFromSerialization
 ], Parser.prototype, "isInitialized", void 0);
 __decorate([
     ignoreFromSerialization
@@ -215,25 +207,10 @@ var ParserDataFormat;
 (function (ParserDataFormat) {
     ParserDataFormat["GS1AI"] = "gs1ai";
     ParserDataFormat["HIBC"] = "hibc";
-    /**
-     * @deprecated ParserDataFormat.DLID
-     * Use ID Capture instead.
-     */
-    ParserDataFormat["DLID"] = "dlid";
-    /**
-     * @deprecated ParserDataFormat.MRTD
-     * Use ID Capture instead.
-     */
-    ParserDataFormat["MRTD"] = "mrtd";
-    ParserDataFormat["SwissQR"] = "swissQr";
+    ParserDataFormat["SwissQR"] = "swissqr";
     ParserDataFormat["VIN"] = "vin";
-    /**
-     * @deprecated ParserDataFormat.UsUsid
-     * Use ID Capture instead.
-     */
-    ParserDataFormat["UsUsid"] = "usUsid";
-    ParserDataFormat["IataBcbp"] = "iataBcbp";
-    ParserDataFormat["Gs1DigitalLink"] = "gs1DigitalLink";
+    ParserDataFormat["IataBcbp"] = "iata_bcbp";
+    ParserDataFormat["Gs1DigitalLink"] = "gs1_digital_link";
 })(ParserDataFormat || (ParserDataFormat = {}));
 
 var ParserIssueCode;
@@ -267,18 +244,23 @@ var ParserIssueAdditionalInfoKey;
     ParserIssueAdditionalInfoKey["Charset"] = "charset";
 })(ParserIssueAdditionalInfoKey || (ParserIssueAdditionalInfoKey = {}));
 
+// Parser Core
+
+var ParserExports = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    ParsedData: ParsedData,
+    ParsedField: ParsedField,
+    Parser: Parser,
+    get ParserDataFormat () { return ParserDataFormat; },
+    ParserIssue: ParserIssue,
+    get ParserIssueAdditionalInfoKey () { return ParserIssueAdditionalInfoKey; },
+    get ParserIssueCode () { return ParserIssueCode; }
+});
+
 class ScanditParserPluginImplementation {
     // eslint-disable-next-line @typescript-eslint/require-await
     async initialize() {
-        const api = {
-            Parser,
-            ParsedData,
-            ParserDataFormat,
-            ParsedField,
-            ParserIssueCode,
-            ParserIssueAdditionalInfoKey,
-            ParserIssue
-        };
+        const api = Object.assign({}, ParserExports);
         return api;
     }
 }
@@ -290,4 +272,4 @@ registerPlugin('ScanditParserPlugin', {
 // tslint:disable-next-line:variable-name
 const ScanditParserPlugin = new ScanditParserPluginImplementation();
 
-export { ScanditParserPlugin, ScanditParserPluginImplementation };
+export { ParsedData, ParsedField, Parser, ParserDataFormat, ParserIssue, ParserIssueAdditionalInfoKey, ParserIssueCode, ScanditParserPlugin, ScanditParserPluginImplementation };
