@@ -1,4 +1,4 @@
-import { DataCaptureComponent, PrivateDataCaptureComponent } from 'scandit-datacapture-frameworks-core';
+import { DataCaptureComponent, DataCaptureContext, PrivateDataCaptureComponent } from 'scandit-datacapture-frameworks-core';
 import { ParsedData } from './ParsedData';
 import { ParserDataFormat } from './ParserDataFormat';
 import { DefaultSerializeable } from 'scandit-datacapture-frameworks-core';
@@ -19,11 +19,12 @@ export declare class Parser extends DefaultSerializeable implements DataCaptureC
     private options;
     private _id;
     get id(): string;
+    private _context;
     private isInitialized;
     private waitingForInitialization;
     private _proxy;
     private get proxy();
-    static create(dataFormat: ParserDataFormat): Promise<Parser>;
+    static forContextAndFormat(context: DataCaptureContext, dataFormat: ParserDataFormat): Promise<Parser>;
     private constructor();
     setOptions(options: {
         [key: string]: any;
