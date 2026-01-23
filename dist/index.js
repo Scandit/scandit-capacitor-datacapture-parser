@@ -1,6 +1,6 @@
-import { nameForSerialization, DefaultSerializeable, ignoreFromSerialization } from 'scandit-capacitor-datacapture-core/dist/core';
-import { capacitorExec } from 'scandit-capacitor-datacapture-core';
 import { registerPlugin } from '@capacitor/core';
+import { nameForSerialization, ignoreFromSerialization, DefaultSerializeable } from 'scandit-capacitor-datacapture-core/dist/core';
+import { capacitorExec } from 'scandit-capacitor-datacapture-core';
 
 class ParserIssue {
     get code() {
@@ -160,6 +160,20 @@ class Parser extends DefaultSerializeable {
             return parser;
         });
     }
+    /**
+     * @deprecated Use Parser.create(dataFormat) instead.
+     */
+    static forContextAndFormat(context, dataFormat) {
+        const parser = new Parser();
+        parser.dataFormat = dataFormat;
+        parser._context = context;
+        return parser.proxy.createUpdateNativeInstance()
+            .then(() => {
+            parser.isInitialized = true;
+            parser.waitingForInitialization.forEach(f => f());
+            return parser;
+        });
+    }
     constructor() {
         super();
         this.type = 'parser';
@@ -193,6 +207,9 @@ class Parser extends DefaultSerializeable {
 __decorate([
     nameForSerialization('id')
 ], Parser.prototype, "_id", void 0);
+__decorate([
+    ignoreFromSerialization
+], Parser.prototype, "_context", void 0);
 __decorate([
     ignoreFromSerialization
 ], Parser.prototype, "isInitialized", void 0);
@@ -244,23 +261,18 @@ var ParserIssueAdditionalInfoKey;
     ParserIssueAdditionalInfoKey["Charset"] = "charset";
 })(ParserIssueAdditionalInfoKey || (ParserIssueAdditionalInfoKey = {}));
 
-// Parser Core
-
-var ParserExports = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    ParsedData: ParsedData,
-    ParsedField: ParsedField,
-    Parser: Parser,
-    get ParserDataFormat () { return ParserDataFormat; },
-    ParserIssue: ParserIssue,
-    get ParserIssueAdditionalInfoKey () { return ParserIssueAdditionalInfoKey; },
-    get ParserIssueCode () { return ParserIssueCode; }
-});
-
 class ScanditParserPluginImplementation {
     // eslint-disable-next-line @typescript-eslint/require-await
     async initialize() {
-        const api = Object.assign({}, ParserExports);
+        const api = {
+            Parser,
+            ParsedData,
+            ParserDataFormat,
+            ParsedField,
+            ParserIssueCode,
+            ParserIssueAdditionalInfoKey,
+            ParserIssue
+        };
         return api;
     }
 }
@@ -272,4 +284,4 @@ registerPlugin('ScanditParserPlugin', {
 // tslint:disable-next-line:variable-name
 const ScanditParserPlugin = new ScanditParserPluginImplementation();
 
-export { ParsedData, ParsedField, Parser, ParserDataFormat, ParserIssue, ParserIssueAdditionalInfoKey, ParserIssueCode, ScanditParserPlugin, ScanditParserPluginImplementation };
+export { ScanditParserPlugin, ScanditParserPluginImplementation };

@@ -15,15 +15,7 @@ struct ParserCommandArgument: CommandJSONArgument {
 }
 
 @objc(ScanditParserNative)
-public class ScanditParserNative: CAPPlugin, CAPBridgedPlugin {
-    public let identifier = "ScanditParserNative" 
-    public let jsName = "ScanditParserNative" 
-    public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "parseString", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "parseRawData", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "createUpdateNativeInstance", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "disposeParser", returnType: CAPPluginReturnPromise),
-    ] 
+public class ScanditParserNative: CAPPlugin {
     var parserModule: ParserModule!
 
     override public func load() {
