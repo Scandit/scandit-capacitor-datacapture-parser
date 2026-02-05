@@ -4,8 +4,8 @@
  * Copyright (C) 2023- Scandit AG. All rights reserved.
  */
 
-import Foundation
 import Capacitor
+import Foundation
 import ScanditCapacitorDatacaptureCore
 import ScanditFrameworksParser
 
@@ -15,7 +15,15 @@ struct ParserCommandArgument: CommandJSONArgument {
 }
 
 @objc(ScanditParserNative)
-public class ScanditParserNative: CAPPlugin {
+public class ScanditParserNative: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "ScanditParserNative"
+    public let jsName = "ScanditParserNative"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "parseString", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "parseRawData", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "createUpdateNativeInstance", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "disposeParser", returnType: CAPPluginReturnPromise),
+    ]
     var parserModule: ParserModule!
 
     override public func load() {
@@ -35,29 +43,44 @@ public class ScanditParserNative: CAPPlugin {
 
     @objc(parseString:)
     func parseString(call: CAPPluginCall) {
-        guard let commandArgument = try? ParserCommandArgument.fromJSONObject(call.options!) else {
+        guard let parserId = call.getString("parserId") else {
             call.reject(CommandError.invalidJSON.toJSONString())
             return
         }
-        parserModule.parse(string: commandArgument.data,
-                           id: commandArgument.id,
-                           result: CapacitorResult(call))
+
+        guard let data = call.getString("data") else {
+            call.reject(CommandError.invalidJSON.toJSONString())
+            return
+        }
+
+        parserModule.parse(
+            string: data,
+            id: parserId,
+            result: CapacitorResult(call)
+        )
     }
 
     @objc(parseRawData:)
     func parseRawData(call: CAPPluginCall) {
-        guard let commandArgument = try? ParserCommandArgument.fromJSONObject(call.options!) else {
+        guard let parserId = call.getString("parserId") else {
             call.reject(CommandError.invalidJSON.toJSONString())
             return
         }
-        parserModule.parse(data: commandArgument.data,
-                           id: commandArgument.id,
-                           result: CapacitorResult(call))
+
+        guard let data = call.getString("data") else {
+            call.reject(CommandError.invalidJSON.toJSONString())
+            return
+        }
+        parserModule.parse(
+            data: data,
+            id: parserId,
+            result: CapacitorResult(call)
+        )
     }
 
     @objc(createUpdateNativeInstance:)
     func createUpdateNativeInstance(call: CAPPluginCall) {
-        guard let parserJson = call.getString("data") else {
+        guard let parserJson = call.getString("parserJson") else {
             call.reject(CommandError.invalidJSON.toJSONString())
             return
         }
@@ -66,7 +89,7 @@ public class ScanditParserNative: CAPPlugin {
 
     @objc(disposeParser:)
     func disposeParser(call: CAPPluginCall) {
-        guard let parserId = call.getString("data") else {
+        guard let parserId = call.getString("parserId") else {
             call.reject(CommandError.invalidJSON.toJSONString())
             return
         }
