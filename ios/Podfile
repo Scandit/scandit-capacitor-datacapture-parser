@@ -9,8 +9,6 @@ end
 
 target 'Plugin' do
   capacitor_pods
-
-  pod 'ScanditCapacitorDatacaptureCore', :path => '../../scandit-capacitor-datacapture-core'
 end
 
 target 'PluginTests' do
