@@ -1,8 +1,23 @@
 export declare enum ParserDataFormat {
     GS1AI = "gs1ai",
     HIBC = "hibc",
-    SwissQR = "swissqr",
+    /**
+     * @deprecated ParserDataFormat.DLID
+     * Use ID Capture instead.
+     */
+    DLID = "dlid",
+    /**
+     * @deprecated ParserDataFormat.MRTD
+     * Use ID Capture instead.
+     */
+    MRTD = "mrtd",
+    SwissQR = "swissQr",
     VIN = "vin",
-    IataBcbp = "iata_bcbp",
-    Gs1DigitalLink = "gs1_digital_link"
+    /**
+     * @deprecated ParserDataFormat.UsUsid
+     * Use ID Capture instead.
+     */
+    UsUsid = "usUsid",
+    IataBcbp = "iataBcbp",
+    Gs1DigitalLink = "gs1DigitalLink"
 }
