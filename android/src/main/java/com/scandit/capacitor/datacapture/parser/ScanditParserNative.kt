@@ -14,7 +14,6 @@ import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 import com.scandit.capacitor.datacapture.core.ScanditCaptureCoreNative
 import com.scandit.capacitor.datacapture.core.utils.CapacitorResult
-import com.scandit.datacapture.frameworks.core.errors.ParameterNullError
 import com.scandit.datacapture.frameworks.parser.ParserModule
 import org.json.JSONException
 import org.json.JSONObject
@@ -49,34 +48,22 @@ class ScanditParserNative(
 
     @PluginMethod
     fun parseString(call: PluginCall) {
-        val parserId = call.data.getString("parserId")
-            ?: return call.reject(ParameterNullError("parserId").message)
-        val data = call.data.getString("data")
-            ?: return call.reject(ParameterNullError("data").message)
-        parserModule.parseString(parserId, data, CapacitorResult(call))
+        parserModule.parseString(call.data.toString(), CapacitorResult(call))
     }
 
     @PluginMethod
     fun parseRawData(call: PluginCall) {
-        val parserId = call.data.getString("parserId")
-            ?: return call.reject(ParameterNullError("parserId").message)
-        val data = call.data.getString("data")
-            ?: return call.reject(ParameterNullError("data").message)
-        parserModule.parseRawData(parserId, data, CapacitorResult(call))
+        parserModule.parseRawData(call.data.toString(), CapacitorResult(call))
     }
 
     @PluginMethod
     fun createUpdateNativeInstance(call: PluginCall) {
-        val parserJson = call.data.getString("parserJson")
-            ?: return call.reject(ParameterNullError("parserJson").message)
-        parserModule.createOrUpdateParser(parserJson, CapacitorResult(call))
+        parserModule.createOrUpdateParser(call.data.getString("data") ?: "", CapacitorResult(call))
     }
 
     @PluginMethod
     fun disposeParser(call: PluginCall) {
-        val parserId = call.data.getString("parserId")
-            ?: return call.reject(ParameterNullError("parserId").message)
-        parserModule.disposeParser(parserId, CapacitorResult(call))
+        parserModule.disposeParser(call.data.getString("data") ?: "", CapacitorResult(call))
     }
 
     companion object {
