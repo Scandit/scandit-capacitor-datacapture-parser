@@ -7,6 +7,7 @@
 import Capacitor
 import Foundation
 import ScanditCapacitorDatacaptureCore
+import ScanditFrameworksCore
 import ScanditFrameworksParser
 
 struct ParserCommandArgument: CommandJSONArgument {
@@ -19,10 +20,7 @@ public class ScanditParserNative: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "ScanditParserNative"
     public let jsName = "ScanditParserNative"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "parseString", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "parseRawData", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "createUpdateNativeInstance", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "disposeParser", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "executeParser", returnType: CAPPluginReturnPromise)
     ]
     var parserModule: ParserModule!
 
@@ -36,63 +34,29 @@ public class ScanditParserNative: CAPPlugin, CAPBridgedPlugin {
         parserModule.didStop()
     }
 
+    @objc(executeParser:)
+    func executeParser(_ call: CAPPluginCall) {
+        let coreModuleName = String(describing: CoreModule.self)
+        guard let coreModule = DefaultServiceLocator.shared.resolve(clazzName: coreModuleName) as? CoreModule else {
+            call.reject("Unable to retrieve the CoreModule from the locator.")
+            return
+        }
+
+        let result = CapacitorResult(call)
+        let handled = coreModule.execute(
+            CapacitorMethodCall(call),
+            result: result,
+            module: parserModule
+        )
+
+        if !handled {
+            let methodName = call.getString("methodName") ?? "unknown"
+            call.reject("Unknown Core method: \(methodName)")
+        }
+    }
+
     @objc(getDefaults:)
     func getDefaults(call: CAPPluginCall) {
         call.resolve([:])
-    }
-
-    @objc(parseString:)
-    func parseString(call: CAPPluginCall) {
-        guard let parserId = call.getString("parserId") else {
-            call.reject(CommandError.invalidJSON.toJSONString())
-            return
-        }
-
-        guard let data = call.getString("data") else {
-            call.reject(CommandError.invalidJSON.toJSONString())
-            return
-        }
-
-        parserModule.parse(
-            string: data,
-            id: parserId,
-            result: CapacitorResult(call)
-        )
-    }
-
-    @objc(parseRawData:)
-    func parseRawData(call: CAPPluginCall) {
-        guard let parserId = call.getString("parserId") else {
-            call.reject(CommandError.invalidJSON.toJSONString())
-            return
-        }
-
-        guard let data = call.getString("data") else {
-            call.reject(CommandError.invalidJSON.toJSONString())
-            return
-        }
-        parserModule.parse(
-            data: data,
-            id: parserId,
-            result: CapacitorResult(call)
-        )
-    }
-
-    @objc(createUpdateNativeInstance:)
-    func createUpdateNativeInstance(call: CAPPluginCall) {
-        guard let parserJson = call.getString("parserJson") else {
-            call.reject(CommandError.invalidJSON.toJSONString())
-            return
-        }
-        parserModule.createOrUpdateParser(parserJson: parserJson, result: CapacitorResult(call))
-    }
-
-    @objc(disposeParser:)
-    func disposeParser(call: CAPPluginCall) {
-        guard let parserId = call.getString("parserId") else {
-            call.reject(CommandError.invalidJSON.toJSONString())
-            return
-        }
-        parserModule.disposeParser(parserId: parserId, result: CapacitorResult(call))
     }
 }
