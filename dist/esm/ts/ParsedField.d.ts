@@ -3,6 +3,7 @@ export interface ParsedFieldJSON {
     name: string;
     parsed: any;
     rawString: string;
+    issues?: string[];
     warnings?: ParserIssueJSON[];
 }
 export interface PrivateParsedField {
@@ -15,6 +16,8 @@ export declare class ParsedField {
     get parsed(): any;
     private _rawString;
     get rawString(): string;
+    private _issues;
+    get issues(): string[];
     private _warnings;
     get warnings(): ParserIssue[];
     private static fromJSON;
