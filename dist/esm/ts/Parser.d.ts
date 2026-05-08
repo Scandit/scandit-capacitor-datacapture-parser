@@ -24,10 +24,6 @@ export declare class Parser extends DefaultSerializeable implements DataCaptureC
     private waitingForInitialization;
     private _proxy;
     private get proxy();
-    static create(dataFormat: ParserDataFormat): Promise<Parser>;
-    /**
-     * @deprecated Use Parser.create(dataFormat) instead.
-     */
     static forContextAndFormat(context: DataCaptureContext, dataFormat: ParserDataFormat): Promise<Parser>;
     private constructor();
     setOptions(options: {
