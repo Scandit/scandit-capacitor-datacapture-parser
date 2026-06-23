@@ -118,33 +118,114 @@ class ParsedData {
     }
 }
 
+/*
+ * This file is part of the Scandit Data Capture SDK
+ *
+ * Copyright (C) 2025- Scandit AG. All rights reserved.
+ */
+/**
+ * Adapter class for Parser operations.
+ * Provides typed methods that internally call $executeParser.
+ * Generated from schema definition to ensure parameter and method name consistency.
+ */
+class ParserProxyAdapter {
+    constructor(proxy) {
+        this.proxy = proxy;
+    }
+    /**
+     * Parses a string and returns structured data
+     * @param parserId Unique identifier of the parser instance
+     * @param data String data to parse
+     */
+    parseString(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ parserId, data }) {
+            const result = yield this.proxy.$executeParser({
+                moduleName: 'ParserModule',
+                methodName: 'parseString',
+                isEventRegistration: false,
+                parserId,
+                data,
+            });
+            return result.data;
+        });
+    }
+    /**
+     * Parses raw data and returns structured data
+     * @param parserId Unique identifier of the parser instance
+     * @param data Raw data to parse
+     */
+    parseRawData(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ parserId, data }) {
+            const result = yield this.proxy.$executeParser({
+                moduleName: 'ParserModule',
+                methodName: 'parseRawData',
+                isEventRegistration: false,
+                parserId,
+                data,
+            });
+            return result.data;
+        });
+    }
+    /**
+     * Creates or updates a native parser instance
+     * @param parserJson Parser configuration as JSON string
+     */
+    createUpdateNativeInstance(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ parserJson }) {
+            const result = yield this.proxy.$executeParser({
+                moduleName: 'ParserModule',
+                methodName: 'createUpdateNativeInstance',
+                isEventRegistration: false,
+                parserJson,
+            });
+            return result;
+        });
+    }
+    /**
+     * Disposes the parser instance and releases resources
+     * @param parserId Unique identifier of the parser instance to dispose
+     */
+    disposeParser(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ parserId }) {
+            const result = yield this.proxy.$executeParser({
+                moduleName: 'ParserModule',
+                methodName: 'disposeParser',
+                isEventRegistration: false,
+                parserId,
+            });
+            return result;
+        });
+    }
+}
+
 class ParserController extends BaseController {
     constructor(parser) {
         super('ParserProxy');
+        this.adapter = new ParserProxyAdapter(this._proxy);
         this.parser = parser;
     }
     parseString(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield this._proxy.$parseString({ parserId: this.parser.id, data: data });
-            const jsonData = JSON.parse(result.data);
+            const result = yield this.adapter.parseString({ parserId: this.parser.id, data: data });
+            const jsonData = JSON.parse(result);
             return ParsedData['fromJSON'](jsonData);
         });
     }
     parseRawData(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield this._proxy.$parseRawData({ parserId: this.parser.id, data: data });
-            const jsonData = JSON.parse(result.data);
+            const result = yield this.adapter.parseRawData({ parserId: this.parser.id, data: data });
+            const jsonData = JSON.parse(result);
             return ParsedData['fromJSON'](jsonData);
         });
     }
     createUpdateNativeInstance() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this._proxy.$createUpdateNativeInstance({ parserJson: JSON.stringify(this.parser.toJSON()) });
+            yield this.adapter.createUpdateNativeInstance({ parserJson: JSON.stringify(this.parser.toJSON()) });
         });
     }
     disposeParser() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this._proxy.$disposeParser({ parserId: this.parser.id });
+            yield this.adapter.disposeParser({ parserId: this.parser.id });
         });
     }
 }
@@ -195,6 +276,7 @@ var ParserDataFormat;
     ParserDataFormat["VIN"] = "vin";
     ParserDataFormat["IataBcbp"] = "iata_bcbp";
     ParserDataFormat["Gs1DigitalLink"] = "gs1_digital_link";
+    ParserDataFormat["Epc"] = "epc";
 })(ParserDataFormat || (ParserDataFormat = {}));
 
 var ParserIssueCode;
