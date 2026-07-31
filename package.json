@@ -1,6 +1,6 @@
 {
   "name": "scandit-capacitor-datacapture-parser",
-  "version": "8.1.6",
+  "version": "8.5.2",
   "description": "Scandit Data Capture SDK for Capacitor",
   "license": "Apache-2.0",
   "private": false,
@@ -31,14 +31,14 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "scandit-capacitor-datacapture-core": "8.1.6",
-    "scandit-datacapture-frameworks-core": "8.1.6",
-    "scandit-datacapture-frameworks-parser": "8.1.6"
+    "scandit-capacitor-datacapture-core": "8.5.2",
+    "scandit-datacapture-frameworks-core": "8.5.2",
+    "scandit-datacapture-frameworks-parser": "8.5.2"
   },
   "devDependencies": {
-    "@capacitor/android": ">=5.0.0 <8.0.0",
-    "@capacitor/core": ">=5.0.0 <8.0.0",
-    "@capacitor/ios": ">=5.0.0 <8.0.0",
+    "@capacitor/android": ">=5.0.0 <9.0.0",
+    "@capacitor/core": ">=5.0.0 <9.0.0",
+    "@capacitor/ios": ">=5.0.0 <9.0.0",
     "@capacitor/docgen": "^0.2.1",
     "@types/node": "18.15.3",
     "rimraf": "4.4.0",
@@ -57,8 +57,10 @@
     "ios/",
     "android/",
     "ScanditCapacitorDatacaptureParser.podspec",
-    "Package.swift"
+    "Package.swift",
+    "THIRD_PARTY.txt"
   ],
+  "packageManager": "pnpm@10.15.0",
   "capacitor": {
     "ios": {
       "src": "ios"
