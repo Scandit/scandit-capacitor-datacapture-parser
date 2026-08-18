@@ -1,6 +1,6 @@
 {
   "name": "scandit-capacitor-datacapture-parser",
-  "version": "8.5.2",
+  "version": "8.5.3",
   "description": "Scandit Data Capture SDK for Capacitor",
   "license": "Apache-2.0",
   "private": false,
@@ -31,9 +31,9 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "scandit-capacitor-datacapture-core": "8.5.2",
-    "scandit-datacapture-frameworks-core": "8.5.2",
-    "scandit-datacapture-frameworks-parser": "8.5.2"
+    "scandit-capacitor-datacapture-core": "8.5.3",
+    "scandit-datacapture-frameworks-core": "8.5.3",
+    "scandit-datacapture-frameworks-parser": "8.5.3"
   },
   "devDependencies": {
     "@capacitor/android": ">=5.0.0 <9.0.0",
