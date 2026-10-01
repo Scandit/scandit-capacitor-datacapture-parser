@@ -2,9 +2,7 @@ import { nameForSerialization, DefaultSerializeable, ignoreFromSerialization, Ba
 import { registerPlugin } from '@capacitor/core';
 import { CapacitorNativeCaller, capacitorExec } from 'scandit-capacitor-datacapture-core';
 
-const PARSER_PROXY_TYPE_NAMES = [
-    'ParserProxy',
-];
+const PARSER_PROXY_TYPE_NAMES = ['ParserProxy'];
 
 function registerParserProxies(provider) {
     registerProxies(PARSER_PROXY_TYPE_NAMES, provider);
@@ -237,7 +235,7 @@ class Parser extends DefaultSerializeable {
     static create(dataFormat) {
         const parser = new Parser();
         parser.dataFormat = dataFormat;
-        const promise = parser.controller.createUpdateNativeInstance().then(() => (Promise.resolve(parser)));
+        const promise = parser.controller.createUpdateNativeInstance().then(() => Promise.resolve(parser));
         return promise;
     }
     constructor() {
