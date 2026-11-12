@@ -1,6 +1,6 @@
 {
   "name": "scandit-capacitor-datacapture-parser",
-  "version": "8.7.0",
+  "version": "8.7.1",
   "description": "Scandit Data Capture SDK for Capacitor",
   "license": "Apache-2.0",
   "private": false,
@@ -34,7 +34,7 @@
     "coverage": "jest --coverage"
   },
   "dependencies": {
-    "scandit-capacitor-datacapture-core": "8.7.0"
+    "scandit-capacitor-datacapture-core": "8.7.1"
   },
   "devDependencies": {
     "@capacitor/android": ">=5.0.0 <9.0.0",
