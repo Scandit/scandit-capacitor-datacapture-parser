@@ -1,4 +1,4 @@
-import { ScanditLogger, nameForSerialization, DefaultSerializeable, ignoreFromSerialization, BaseController, registerProxies } from 'scandit-capacitor-datacapture-core/dist/core';
+import { nameForSerialization, DefaultSerializeable, ignoreFromSerialization, BaseController, registerProxies } from 'scandit-capacitor-datacapture-core/dist/core';
 import { registerPlugin } from '@capacitor/core';
 import { CapacitorNativeCaller, capacitorExec } from 'scandit-capacitor-datacapture-core';
 
@@ -196,26 +196,6 @@ class ParserProxyAdapter {
     }
 }
 
-/*
- * This file is part of the Scandit Data Capture SDK
- *
- * Copyright (C) 2026- Scandit AG. All rights reserved.
- */
-// THIS FILE IS GENERATED. DO NOT EDIT MANUALLY.
-// Generator: scripts/bridge_generator/generate.py
-// Schema: scripts/bridge_generator/schemas/parser.json
-/**
- * Per-method `LogRecord` level and category overrides for the ParserProxy
- * bridge surface. Consumed by the centralized `ScanditLogger` interceptor:
- * per-frame / per-scan callbacks log at `Trace` under their category label, so
- * they only show once the level is raised to `Trace`.
- *
- * Auto-registered as a side effect of importing this module via the
- * generated `index.ts` barrel — no customer wiring required.
- */
-const PARSER_PROXY_LOG_METADATA = {};
-ScanditLogger.registerMethodMetadata(PARSER_PROXY_LOG_METADATA);
-
 class ParserController extends BaseController {
     constructor(parser) {
         super('ParserProxy');
@@ -278,13 +258,6 @@ class Parser extends DefaultSerializeable {
     dispose() {
         void this.controller.disposeParser();
     }
-    toJSON() {
-        // Fields are decorator-serialized (@nameForSerialization); this override only adds a
-        // declared, schema-backed return type - no runtime validation on an outbound payload.
-        // Every generated schema enforces additionalProperties: false, so validating here would
-        // turn any future field addition into a customer-facing throw instead of a native no-op.
-        return super.toJSON();
-    }
 }
 __decorate([
     nameForSerialization('id')
@@ -302,7 +275,6 @@ var ParserDataFormat;
     ParserDataFormat["IataBcbp"] = "iata_bcbp";
     ParserDataFormat["Gs1DigitalLink"] = "gs1_digital_link";
     ParserDataFormat["Epc"] = "epc";
-    ParserDataFormat["French2dDoc"] = "french2ddoc";
 })(ParserDataFormat || (ParserDataFormat = {}));
 
 var ParserIssueCode;
